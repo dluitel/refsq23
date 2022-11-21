@@ -1,0 +1,394 @@
+1 Introduction
+1.1 Background
+There are currently many problems with communication systems for wind power plants due to lack of standards and methods. Suppliers usually have their own control system solutions and they are not compatible with others. This is a problem for the users, who obviously want the possibility to manage different wind power systems independently of the supplier. The need for a specification applied to a wind power plant, that shall be supervised and controlled by a SCADA-system, is apparent.
+1.2 Intention
+The purpose of the specification on functional requirements (“Specification”) is to specify terms for establishment and operation of a system for transfer of data between the controller system in a wind turbine and remote computers. The Specification is intended as guidance during procurement of communication solutions for wind power plants. The Specification may be applied for single wind turbine installations as well as for wind farms. The Specifica- tion includes requirements for data transfer and handling, i.e. which data needs to be ex- changed and how it shall be done, but not how the data shall be used by the SCADA-system. It is not within the scope of this Specification to describe and specify characteristics of SCADA-systems, HMI, control algorithms etc.
+When using specifications on tendering or purchase, it is the responsibility of an employer or user to specify in addition, supplementary or more detailed specifications and whether all or only parts of the Specification shall be applied.
+In the appendices of the Specification some of the potential technical solutions that might fulfil the requirements stated in the document are described. However it is not within the pur- pose of the Specification to make a recommendation on a particular solution or communica- tion protocol.
+1.3 Participants
+This draft Specification has been prepared by a working group with representatives from the companies: Vattenfall Utveckling AB and Sycon Energikonsult as representatives of   AB, Sydkraft Vind AB, Tech-wise A/S as representative of Elsam A/S, SEAS Distribution A.m.b.A as representative of Energi E2 A/S.
+ 
+
+ 
+ 2 Scope and Outline of the Document
+The scope of this specification is communication systems supporting functions mainly for remote operation and supervision of wind power plants. Apart from the functions needed by the operator the system shall support also functions needed by other parties. The functions are further described in Section 4 System.
+This chapter explains the different parts of the operational system and how they are defined. The structure of the document is described by Figure 1, where the different subsections corre- spond with the disposition of the document.
+
+Figure 1: System overview for wind power communication 2.1 System description
+On the highest level the system is described from an operational point of view, i.e. the func- tions needed for remote operation and supervision of wind power plants. The functions are described from a communication point of view. The affected actors and functions are de- scribed in Section 4 System.
+As depicted in Figure 1, there are both wind farms and single wind turbines. In the case of bigger plants there is usually a wind farm main controller (WFMC) and an internal communi- cation system, which connects all the turbines to the WFMC for further external communica- tion.
+2.2 Communication System
+In this Specification “communication system” shall be understood as a system for:
+• Transfer of data from a process/plant level to a level, where data are accessible for an ap-
+plication in a standardised format
+• Transfer of data to a process/plant level for distribution of commands, operational settings
+etc.
+The requirements on the communication system are specified in Section 5 Communication.
+ 
+
+ 
+ Data may also be understood as verbal communication, as in telephone communication, as well as visual communication, as in video communication. The different kinds of data com- munication need to be able to coexist on the same transmission network.
+2.3 Wind Power Plant Data
+The different operational functions need access to data in the power plant and the sending and receiving parts must be able to interpret and handle the data. Therefore, the data structure must be defined together with the data types and other characteristics. This is done in Sec- tion 6 Plant Data.
+ 
+
+3 Definitions and Assumptions
+This chapter includes definitions and descriptions on wind power related terms and equip- ment.
+A Wind Turbine is in this context a wind driven generating unit feeding electric power into a grid. The wind turbine is autonomously controlled, which means that all-necessary control and safety systems for proper operation are self-contained. It does not depend on external control devices to perform its basic operations. The wind turbine may however be supervised and controlled by a central system (e.g. a SCADA-system) for co-ordination of more wind turbines and for co-ordination with the electric network. In order to conduct operation and maintenance, a system for supervision and control of the wind turbine(s) is essential, as the wind turbines typically are located remotely and at far distance from the operator.
+3.1 Wind Farms
+A Wind Farm is characterised by:
+• The size and location of the power producing plant, i.e. the effects on the power network.
+Typically the total installed capacity is of more than 10 MW in one location. The limit is
+slowly rising with the trend towards larger and larger wind turbines.
+• The properties and functions of the wind farm, being more advanced than of a smaller wind power plant. A wind farm generally has a main controller for co-ordinated control of
+the individual wind turbines.
+The wind farm will typically have its own high voltage feeder network with a number of small substations. The electrical properties and behaviour of the wind farm is of such a nature, that it typically will be met with specific requirements regarding power quality and reactive power compensation. In some locations, the wind farm must participate actively in the regula- tion of the network stability.
+The wind farm is typically owned and operated by one or more companies specialised in elec- trical power production. The approach to operation and maintenance is based on remote su- pervision and monitoring of the plant with on-line functions and frequent updating of several operational data. The needs for advanced functions will typically increase with the installed capacity of the wind farm. In very large wind farms of 100 MW or more, several parties will be involved in the operation, as the wind farm will have a significant impact on the electrical network.
+3.2 Single Wind Turbine Installations and Wind Turbine Clusters
+A single wind turbine or a wind turbine cluster is among others characterised by:
+• The small size of the power producing plant. A single wind turbine or a wind turbine clus-
+ter has minor impact on the power network
+• The properties and functions of the wind turbine(s), being rather simple compared to a
+wind farm.
+Typically a single wind turbine or a wind turbine cluster is connected to the grid at medium voltage level. The installation is not of major importance to the grid. The installation will typically have a very simple high voltage feeder to the network. The electrical properties and behaviour of the installation is of such a nature, that it will only be met with moderate re- quirements regarding power quality and reactive power compensation.
+Private individuals, private corporations or electrical power companies often only own a sin- gle wind turbine or a wind turbine cluster. The approach to operation and maintenance is based on remote supervision and monitoring of the wind turbine(s) but the amount of operational data needed and the need for update of data is very moderate. The services will typi- cally be based on a requesting system (dial-up) connected to the public telephone network. The need for advanced functions is very modest, as the primary role of the wind turbine(s) is to produce as much electricity as possible. Normally only one or two parties are engaged in operation and maintenance of the wind turbine(s), typically the owner and the operation and maintenance organisation, which in some cases is one and the same.
+3.3 Parties
+The operators, users and other interested parties requiring services and functions of a commu- nication system will typically be as indicated in the table below.
+Table 1: Parties and their scope of interest.
+ 
+4 System
+This section describes the parties’ functional requirements.
+4.1 General
+Basically the communication system must assist the operators, users and other interested par- ties in performing their tasks by provision of services. The system must be flexible in support- ing future requirements and future developments. The system must be open in the sense that “anyone shall be able to get information on anything from anywhere”, once they have au- thorisation to the system. The system thus shall be adapted to individual users and services provided accordingly by means of configurations, set-ups etc.
+The communication system shall be based on open and widely accepted methods with a high degree of interface possibilities. The system shall be robust and reliable, but the system shall not be used for the safe and secure operation of the plant. Faults in the communication system shall not cause malfunction of an individual wind turbine. The system shall be designed in a way that faults of a sub-system interferes as little as possible with functions of the communi- cation system as a whole.
+In designing the system it shall be taken into account, that the physical environment at the plant typically has a wide span of temperature, moisture, salinity and vibration levels.
+4.1.1 Data interchange for secondary systems
+Secondary systems may be for example Beacons (sea and air), Fire protection, Emergency alarm, Intruder alarm, Power supplies and emergency power systems, Meteorological sta- tions, Safety systems for personnel, Data logger systems and Condition monitoring. Condition monitoring will be very important for offshore wind farms and it will be a standard function in all larger wind turbines.
+The condition monitoring system provides status and analysis reports for components. The analysis may be in the form of spectres, trends, statistic figures, time tracking etc.
+The values shall be available for display on operator HMI as well as for storage (databases). Updating of values shall be selectable down to an interval of 1 sec. All data must be stored in the plant controller for transmission on demand. Transfer of data from the buffers may be carried out off-line without synchronism with real-time.
+4.2 Functions
+The basic functions of the system can be grouped in two main categories, Operational or con- trol functions and System management functions.
+A third group is Process automation functions, which involve functions that operate with pro- cess data directly without the involvement of an operator. However this group is not within the scope of this specification and is not further treated.
+4.2.1 Operational functions
+The operational functions are needed for the normal daily operation of the wind power plant. In these functions an HMI, either local or remote, is included. The operational functions are used to present process or system information to an operator or to provide him the control e.g. by commands. The operational functions include the following:
+• Access security management
+Access to operational functions has to be controlled by a set of rules. Access control is to allow the capability to restrict an authenticated client to a pre-determined set of services and objects.
+• Supervision (Wind power plant operation and Network operation)
+Local or remote monitoring of the status and changes of states (indications) for operational devices.
+• Control
+Control function allows an operator or an automatic function to operate equipment like switchgear or transformer, a protection, etc. Control is subject to miscellaneous filters that check that there will be no damage if the control is issued.
+• Parameter changes (parameter set switching, subset of setting, or single parameter)
+In addition to single parameters, an application may have several possible pre-defined pa- rameter sets (but only one active set).
+• Alarm management
+Alarm is generated when a data of the system takes a value that shall be specially consid- ered by the operator, i.e. there is a need for attracting attention to some abnormal state. Alarm management functions allow an operator to visualise, acknowledge and clear alarms.
+• Event and Log management
+Functions for continuous scanning of devices for alarms, operator control actions and changes in state, and for recording the events chronologically with date and time informa- tion.
+• Data retrieval of configuration data and settings
+Functions for a follow-up of parameter settings should include services to retrieve all pa- rameters (names, values and units for all setpoints) or to retrieve only those that differ from the default values.
+• Disturbance / fault record retrieval
+Data retrieval for the purpose if display and bulk data storage of fault data.
+4.2.2 System management functions
+System management functions include both functions for system support and for system con- figuration and maintenance. System support functions are used to manage the system itself (e.g. Network management, Time synchronisation, and Self-checking of communication equipment). The functions support the total system and have no direct impact on the process. System configuration or maintenance functions are used to set-up or evolve (maintain) the system. The system configuration and maintenance functions include the setting and changing of configuration data and the retrieval of configuration information from the system. The most important examples of System Management functions are:
+System Support
+• Network management
+Functions needed to configure and maintain the communication network. The basic task is the identification of communication objects/devices.
+• Time synchronisation
+Synchronisation of devices within a communication system.
+• Self-checking
+The self-check detects if an object or device is fully operational, partially operational or not operational.
+  
+System Configuration and Maintenance
+• Software management
+The software management include version control, download, activation and retrieval of software.
+• Configuration management
+The function is used to download, activate and retrieve configuration data
+• Operative mode control
+Allows an authorised operator to start and stop functions or objects within the system, including manual activation or reset of subsystems.
+• Setting (parameter set)
+The setting function allows an operator read and to change on or more parameters affect-
+ing the behaviour of the object/device.
+• Test mode
+Possibility to check a function but avoiding impact on the process (blocking of process outputs).
+• System security management
+Function to allow control and supervision of the security of the system against unauthor- ised access or loss of activity.
+4.3 Otherfunctions,outofscope
+The functions here described are not within the scope of this Specification, that is communi- cation for remote operation. However, from an overall communication system point of view, it can be desired that all communication have to be able to coexist on the same transmission media.
+4.3.1 Local functionality
+Local system functionality for hook-up for temporary data transmission is not within the scope of this specification. Thus the communication system for remote operation do not need to support functions such as hook-up of portable PC at the plant for Internet access, WEB- cam connection, E-mail service, Program execution, Plant information and Service instruc- tions.
+4.3.2 Voice and visual communication
+A verbal dialogue system (e.g. telephone) is essential for contacts between operation and maintenance personnel in the wind power plant and the control centre operator. Video com- munication may also facilitate the co-operation between field personnel and control centre personnel. Video may also be used for supervision of equipment. However these function is not within the scope of this specification.
+4.3.3 Actor specific functions
+Functions that are of no relevance to the wind power plant or wind turbine operators, the most important actors, are considered to be out of scope. Energy accounting for the network opera- tor is one example.
+ 
+   
+ 
+ 5 Communication
+In this section the requirements on the communication between the different units in the sys- tem are specified.
+Figure 2: Communication between control units and SCADA
+In wind farms a local communication system might be the link between overall control units and the individual wind turbine controller. An overall control unit may be a “wind farm main controller” conducting an overall governing of the plant output and the grid compatibility.
+5.1 Basic Services
+As stated in Section 2.2 the main objective for the communication system is to transfer data to and from the process/plant level. The overall purpose is to support the functions described in Section 4. In order to accomplish this the basic services of the communication system shall include the following:
+• Connection establishment and release
+• Authentication
+• Identification of functional object and devices
+• Data access and transfer
+• Reliable communication over a network
+
+5.2 DataTransferPrinciples
+Data can be transferred according to one of the following principles:
+A. Periodic data transfer (all data or only data that has changed since last transfer)
+B. Data transfer on demand
+C. Event driven (spontaneuos) data transfer
+D. Command transfer
+E. Set point transfer
+  
+5.3 Differentkindsofdata
+The following kinds of data need to be supported:
+I. Measurements/analogue data (signals) from the wind power plant
+II. Set points sent to the wind power plant
+III. Binary Signals/Status data from the wind power plant.
+IV. Binary control commands to the wind power plant
+V. Alarms
+VI. Events
+VII. Counters
+VIII. Timers
+IX. Data structures
+X. Time series data
+XI. Short text messages
+XII. Flat files
+A specific kind of data put specific requirements on the communication system. Alarms, for example, need to reach the remote control centre much faster than events. And the latter is often grouped with other events before transmission. The mapping between the different kinds of data, the data transfer principles and the operational functions are described in sec- tion 5.4.
+The different kinds of data can be grouped and named real time/on-line data, historical data or forecasts/schedules. On-line data include measurements/analogue data, binary signals/status data (but might also include counters). Historical data include measurement data (calculated values), counters and timers. Schedules could be start/stop schedules for individual wind tur- bines.
+The different kinds of data for wind power applications is further described, in more detail, in Section 6 Plant Data.
+
+5.4 Mappingbetweenfunctionsandwaysofcommunication
+Data are either polled at the node (the wind turbine) or periodic and automatic sent out from the node (periodic broadcast and event driven transfer). The important requirement is the ‘scanning rate’ (maximum delay).
+Historical data, counter’s and log’s are transferred on demand (a request is sent to the wind turbine and the information is send back).
+Alarm data shall be sent from the wind turbine on occurrence.
+Setting data in the wind turbine and giving orders to the wind turbine are sent to the wind turbine when needed.
+Table 2: Possible mapping between functions and ways of communication 
+
+5.5 GeneralRequirementsforAllDataKinds
+1. It should be possible to time stamp all data. Time stamped data shall be stamped with ‘last updated date + time’ (UTC time). The accuracy and resolution of the timestamp should be at least 10 ms.
+2. All analogue measured values should have readable properties like ‘signal quality’ and ‘scanning rate’. This information does not have to be included with every data transfer. The averaging time and the measuring and averaging method should be documented for all data.
+3. It should be possible to group both analogue and binary values so they can be read in a single transaction
+
+5.6 Security
+Remote monitoring and operation of devices requires strict security measures for several rea- sons. To protect the data from being stolen, corrupted, and intentionally falsified, to protect the device from unauthorised use or to preserve the privacy of monitoring data.
+To enforce these security requirements the following functionality is needed: Authentication, Data Integrity and Data Confidentiality.
+5.6.1 Authentication
+Server authentication shall ensure the client application that it is truly operating on the in- tended site. Client authentication ensures that an authorised client/operator is operating the equipment.
+The rights for each user to operate functions and to see data on different levels in the object hierarchy might be necessary to set. In that way all users can have relevant access to the sys- tem and get updated information from the wind power plants.
+5.6.2 Data Integrity
+Non-corruption of data transferred is necessary, i.e. the ability of a communication system to deliver data from its originator to its destination with an acceptable residual error rate. This prevents both malicious and false operation.
+5.6.3 Data confidentiality
+Data items transferred might need to be encrypted to prevent both malicious and false opera- tion, as well as eavesdropping.
+
+5.7 Performance
+The response times of most operational functions and, therefore, of the related communication does not need to be much faster than one second (human time scale). System management functions, which shall be available for the operators and control systems, are of low time criti- cal nature. Delay in execution of these functions however should not be more than 2 seconds. Regarding safety of persons, plant and electric network, the communication system shall not be of critical nature. No functions regarding safety of persons shall be based on the communi- cation system. No functions regarding safety of plant and electrical network shall be based on the communication system – all safety functions must be self-contained in the process or in the devices where systems interface and will trip automatically. In situations where the com- munication system is completely inaccessible, the plant may be forced to a shutdown by al- ternative means.
+5.7.1 Time Critical Functions
+Regarding optimisation of the operation, the communication system has a major role. The time critical functions include both control and supervision functions. Set points for power control and Start and Stop commands are the most time critical functions, but also a prompt response (Acknowledge-on-receive) is important. Periodic on-line operational data is essen- tial for the optimisation of the operation. Finally the operator need to know the status of the communication system to be able to rely on the presented data.
+The time critical functions shall use short messages with a high priority. Data-wise the mes- sages shall be small and shall be transmitted with a minimum of delay. Delays may occur due to transmission errors, low capacity or low bandwidth of the transport media or network faults. It is essential for the proper design of the communication system to select methods that minimise such properties.
+Time critical functions must be based on fast and reliable transmission of a number of se- lected data types. An example of a typical requirement regarding delays for these data is as follows:
+“The overall transfer time for services in time critical functions shall not be more than 0,5 seconds.”
+5.7.2 Reliability
+Reliability in the sense that data can be retransmitted, reconstructed, or reprocessed if lost or inaccessible of some reason is essential. Data may be inaccessible e.g. because of faults in the process (plant), faults in data transport or faults in data processing units. For most data it must be possible to restore information, including the sequence of events. Local procedures for recovery may incorporate redundancy of selected functions and backup of data. The commu- nication system shall include functionality to transfer stored data to central storage and proc- essing after restoration of the communication.
+To prevent interruptions in the data transfer, the communication system shall allow for redun- dant communication channels. Processing of data may be carried out simultaneously on more units. Automatic procedures for detection of communication faults and for managing redun- dancy of system components shall be established. The physical transport media should possi- bly be redundant to a certain degree depending on the conditions at the specific plant.
+
+5.8 Compatibility with Existing Systems
+There must be a way for existing plants to interface to a new communication system. The expected solution to interface systems using proprietary methods for communication, e.g. manufacturer-specified protocols or customer-specified protocols, to new communication systems is to use gateways.
+The interface to existing plants will provide a subset of the functions and data specified in this Specification. It should however as far as possible be able to present data on the same HMI and provide as many data as possible for the system databases.
+ 
+6 Plant data
+The following section is a description of principles for representation and storage of data. The description is not specific and thorough, as it does not specify in detail all signals or data that must be available. It is the intention of this description to establish rules and principles for what data and what services shall be available from each wind turbine.
+
+Figure 3: Wind power plant data
+The protocol shall have such flexibility that new data can be defined without disturbing old versions of equipment’s that comply to a specific version of the specification. A ‘naming con- vention’ is described in this specification.
+6.1 Informationstructure
+Data is represented by a number of attributes. The number of attributes for a specific data may vary. The number and formats of the attributes sent at configuration time is different than the number and formats of the attributes that is transmitted in any message (data transmission). Each wind power plant shall have defined the total set of data, the naming, the type and de- fault value of the data according to this specification. The information should be standardised according to the following principles:
+• Each device or object shall be self-descriptive (generic part) and the system has to have a function to extract the information contained in the wind power plants objects. It shall be possible to issue an identify request and get a list of all objects in a wind power plant, their names and possibly a short description for each object. It should be possible to get the attributes and services for each object. The list should at minimum include, Name, Type/Kind, Unit, Time requirements, and possibly a short Description.
+• For the HMI such information shall be contained in the device using standard readable text, such as ASCII or Unicode (UTF16) (at least optional in the language of the opera- tor). The presentation of the information itself is out of the scope of this specification.
+• At least for default naming a hierarchical name structure and an object data dictionary specialised for wind power plants should be used.
+• During data transmission the message should at least include the following parts; Name, Value(s), Scan frequency, Time tag and Quality.
+6.1.1 Example: PICOM
+This section presents one example of an information structure.
+To describe the data being exchanged within a substation the CIGRE WG34.03 has intro- duced the concept of PICOM (Piece of information for Communication). By definition, it is a given data element on a given logical path with given communication attributes. The PICOM
+ 
+   
+ 
+ can be compared to a "soft wiring". It is used for defining essential features of communicated data from the application point of view. The main components of a PICOM are summarised mainly by the term’s data, type, performance, and path.
+Data means the content of the information and its identification as needed by the functions Type describes the structure of the data, i.e. if it’s an analogue or a binary value, if it’s a sin- gle value or a set of data, etc.
+Performance means the permissible transmission time, the data integrity and the method or cause of transmission (e.g. periodic, event driven, on demand).
+Path contains the logical source and the logical destination
+These PICOMs can been used for data type identification.
+PICOM attributes to be transmitted at configuration time only (subscription, negotiation, etc.) Value for transmission (see above): test or default value if applicable
+Attributes for transmission (see above)
+
+6.2 Naming convention
+Communication and objects in the wind power plant shall be object based. Gear and generator could, for instance, be separate objects. Each including measurements, calculated data, and control services. The system shall be able to manage naming of objects and variables (meas- urements, etc) in a hierarchical naming system in several levels.
+6.2.1 Naming system example
+In the following example a naming system with 18 characters is illustrated. The number of characters may, in other naming systems, be extended, e.g. to handle more than 100 wind tur- bines.
+Figure 4: Object model example
+6.2.2 Gearbox signal naming example.
+   The following is a list over the signals available from a gearbox with 3 bearing temperatures, 1 lube oil sump temperature and 3 vibration sensors. The signal list further comprises the gearbox lube oil pump, a sensor for differential pressure over the filter, an oil cooler fan and, finally, an oil temperature sensor after the cooler.
+
+6.3 Analogue Signals
+All analogue process values shall be accessible in standard SI-units or other physical units. Analogue values “at the source” shall be available as real-time on-line instant data as well as time averaged values. The values shall be available for display on operator HMI as well as for storage (databases). Updating of analogue on-line values shall be selectable down to an inter- val of 1 sec. All averaged values must be stored in the plant controller for retransmission on demand. For averaged values the accuracy of the start time of the period shall be better than 10 ms.
+Some process values are not required as measurements directly at the source. The values shall be accessible as processed data in a condensed and analysed format. This for instance is the case for condition monitoring of components such as gearbox bearings.
+
+6.4 Set point commands
+Values for local functions could be sent as set points. A confirmation of the set point update is required.
+
+6.5 Binary Signals
+All binary process values shall be accessible. Binary values shall be available as real-time on- line instant data. The values shall be available for display on operator HMI as well as for stor- age (databases). The values shall be stored and displayed at level shift with the corresponding date and time tag. Updating of binary on-line values shall be selectable down to an interval of 1 sec.
+
+6.6 Binary control commands
+A handshake procedure is required for all commands that start or stop a mechanical compo- nent, influence the status or operation mode of the wind turbine or change the software. All other control commands shall give a response with the result of the command.
+The binary commands may also include activation and deactivation of programs and parame- ter changes.
+
+6.7 Alarms
+Operational alarms must be transmitted immediately after a triggering. A triggering is typi- cally initiated at any event that results in an automatic stop of the wind turbine, any event that causes an emergency stop or any other alarm-causing event. The alarms shall be available for display on operator HMI as well as for storage (databases).
+
+6.8 Events
+Operational events must be stored in an event log in the plant controller for transmission on demand.
+
+6.9 Counters
+Counters shall be understood as any value accumulated in time originating in the process such as hour counters, production counters, counters for operational modes, timer’s etc. Counters shall be available for display on operator HMI as well as for storage (databases). The values shall be stored with a corresponding date and time tag. Updating of counters shall be select- able down to an interval of 1 sec. All values must be stored in the plant controller for trans- mission on demand.
+ 
+6.10 Timers
+The timers make it possible to determine the time for the important states in the wind turbine, e.g. Generator on-time, Yawing time and Free to operate time. It should be possible to reset all the timers and the ‘Reset date’ shall be stored as a separate item.
+
+6.11 Grouped data
+Data values can be grouped based on logical relationships between the data, as chronologi- cally ordered data, as text etc. This section includes a description of different ways to put to- gether sets of data.
+6.11.1 Data structures
+Data structures typically include several kinds of related data, for example the description of an object.
+6.11.2 Time series data
+Time series data are time based data values for a specific object attribute, for example sam- pled data, metering data, etc.
+6.11.3 Short text messages
+It should be possible to exchange text messages between the wind power plant and the control centre using standard readable text, such as ASCII or Unicode (UTF16).
+6.11.4 Files
+Typically files will be used for upload and download of programs etc.
+
+6.12 Local data storage and handling
+The examples in this section are included for informative purpose. Requirements on local data storage and handling do not effect the communication solution.
+6.12.1 Analogue values
+Selected analogue values shall be stored in FIFO-buffers. The sampling rate of analogue val- ues shall be high enough to characterise events and to determine the cause of faults. A typical sampling rate could be 25 Hz.
+The size of the buffers for analogue values shall correspond to a time span starting at 1 minute before a triggering and ending at 1 minute after a triggering. A triggering is initiated at any event that results in an automatic stop of the wind turbine, any event that causes an emer- gency stop, or any manual stop command (local or remote request).
+Additionally it shall be possible to start a scanning of selected analogue values at a sampling rate up to 25 Hz and a selectable duration. The entire mentioned high rate scanning must be stored in the plant controller. Transfer of data in the buffers shall be carried out without syn- chronism with real-time.
+6.12.2 Binary values
+All binary values must be stored in the plant controller for retransmission on demand. Additionally it shall be possible to start a scanning of selected binary values at a selectable duration. All the mentioned scanning must be stored in the plant controller. Transfer of data in the buffers shall be carried out without synchronism with real-time.
+6.12.3 Alarm logging
+Alarms must be stored in an alarm log. All alarms must be stored in the plant controller for transmission on demand. The buffer depth shall be at least one year. Transfer of data in the buffer shall be carried out without synchronism with real-time.
+6.12.4 Event log
+The buffer depth of the event log shall be at least one year. Transfer of data in the buffer shall be carried out without synchronism with real-time.
+6.12.5 Counters
+The buffer size for every counter shall be at least 20 years of operation with 5000 full load hours per year.
+  
+ 
+ 
+7 References
+ 
+8 Appendices
+A: Technical Solutions
+Appendix A describes some proposed solutions that should correspond to the specification. The intention is to have these concrete solutions as a guideline for the suppliers affected. It is therefore important that the solutions have been validated against the requirements.
+B: Protocols
+Some of the suggested protocols, proposed in Appendix A, have been summarised and inves- tigated in this appendix.
+C: Data lists
+The data from the wind power plant as well as the data sent to the wind power plant are pre- sented as grouped data lists in this appendix.
+  
+ 
+ 
+  
+A Appendix A, Technical solutions
+A.1 Introduction
+This appendix present some examples on technical solutions to fulfil the requirements stated in the main document.
+A.2 Networkstructureandinterfaces
+The communication network on which data transactions shall take place may be organised as one of the following systems:
+- Network system with interface at the individual nodes
+- Network system with interface at the Wind Farm Server
+- Network system with interface to existing older control system/RTU
+Network System 1 (interface level at the individual nodes)
+The basics of this structure are illustrated in Figure A1. The network structure can be summa- rised as follow:
+1. The network consists of interconnected LAN’s. A Wind Farm LAN is established at the
+wind farm and is connected to an operator LAN. The wind farm LAN is a logical LAN.
+Any topology is possible.
+2. The specifications for data transmission in this specification apply to the individual nodes
+in the Wind Farm LAN
+3. At the individual nodes, the methods for acquisition and compilation of data are con-
+ducted on basis of individual, proprietary methods not subject to this specification.
+4. Connection to ”other” parties (e.g. vendor) is established through gateways to the com-
+munication protocol and media of their choice. 
+5. Figure A1: Network System 1. Interface level at the individual nodes.  
+ 
+Network System 2 (interface level at the Wind Farm Server)
+The basics of this structure are illustrated in Figure A2. The network structure can be summa- rised as follow:
+1. The network consists of interconnected LAN’s. A Wind Farm LAN is established at the
+wind farm and is connected to an operator LAN
+2. A Wind Farm Server is gateway between the Wind Farm LAN and the operator LAN. The
+server should be transparent for all data necessary for operational or control functions.
+3. The specifications for data transmission in this specification apply to the Wind Farm
+Server but not to the individual nodes in the Wind Farm LAN
+4. Methods for acquisition and compilation of data in the Wind Farm are conducted on basis
+of individual, proprietary methods not subject to this specification, except for functional
+specifications and requirements due to data properties.
+6. Connection to ”other” parties (e.g. vendor) 
+Figure A2. Network System 2. Interface level at the Wind Farm Server. 
+
+Network System 3 (interface to legacy control systems)
+The basics of this structure are illustrated in Figure A3. The network structure can be summa- rised as follow:
+1. The network consists of dial-up RTUs.
+Figure A3. Network System 3. Interface to legacy control system/RTU A.3 Communicationprotocolstackfunctionality
+Communication reference model
+The layered architectural guidelines of the International Standardisation Organisation (ISO) Open Systems Interconnect (OSI) reference model is here used. The model includes 7 layers as described in Figure A4.
+Figure A4: The Open Systems Interconnect (OSI) reference model
+Layer 4 provides (together with layer 1, 2 and 3) the transport service for the messages de-
+fined in layer 7, the Application layer. The transmission protocols could be any one of the standards defined by ISO, such as OSI TP4, the Internet protocol TCP, or any other protocol.
+ 
+Basic requirements and assumptions
+The following requirements and assumptions are basis for the network systems:
+• The physical transmission media could be any media, such as direct phone connection (e.g. ISDN or analogue), Internet, GSM, or radio link
+• The network is based on Ethernet standards and procedures
+• The network shall operate on TCP/IP- standards and procedures
+• The system shall allow for several protocols and procedures simultaneously on the same network, e.g. file-transfer shall be possible on the same network simultaneously with data transfer to/from wind turbines
+• At each physical location in the network a number of nodes shall be defined. E.g. at a single wind turbine, more than one individual address may be needed to connect to different subsystems.
+• Establishment, maintenance and release of connections/associations are to be handled by the communication system.
+• The communication system should guarantee with a specified availability that messages are received in the same order as they are sent.
+• Message priority may be needed in case of limited capacity.
+• Flow control and error control may be provided.
+
+
+B Appendix B, Protocols
+This appendix is included for informative purpose. The list is by no mean exhaustive. There are several protocols missing. For instance the IEC 61850 suite is not described.
+On several places a question mark indicate that the authors of this document do not have any information on whether the protocol support that particular requirement. Furthermore, for many of the requirements where there is a yes, no or any other comment, the analysis done is not very extensive. For instance, the comments in this section are not based on results from any practical tests.
+ 
+
+  
+C Appendix C, Data list
+C.1 Purpose
+This data list is an example included for informative purpose. It is a Danish example and therefore the data descriptions are in Danish. However the authors of this Specification hope that the name of each data is suffiecient for understanding the definition of the data.
+C.2 Propertiesofthedata
+The data can be described by the following properties:
+- Name (SignalID)
+- Description
+- Unit
+- Kind (ANalogue SIGnal, SET Point, BINary SIGnal, BINary control COMmand, ALarm, EVent, COUnter, TIMer, data STRUCTure, Time SERie, short TEXT message, FILE)
+- Accuracy
+- Priority (HIgh, LOw)
+- Time tag
+- Remark
+C.3 Data groups (accordance Section 6.3-6.11)
+Analogue signals (ANSIG) - Analogue signals
+Set point commands (SETP)
+- Low priority signals - set points
+- High priority signals - set points Binary signals (BINSIG)
+- Status (binary)
+- Binary signals
+Binary control commands (BINCOM)
+- Low priority signals – instructions
+- High priority signals - binary commands Alarms and alarm logging (AL)
+- Alarms and alarm log Event and event logging (EV) - Event log
+Counters (COU)
+- Counters - number of activations
+- Production counters Timers (TIM)
+- Timers (accumulated time) Data structures (STRUCT) Time series (SER)
+Short text message (TEXT) 
+File (FILE)

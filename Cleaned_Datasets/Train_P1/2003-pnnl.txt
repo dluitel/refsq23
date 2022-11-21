@@ -1,0 +1,432 @@
+1. Introduction
+This document specifies requirements for a computerized automated diagnostic tool for the detection of faults in certain heating, ventilation, and air-conditioning (HVAC) system components. The automated diagnostic tool is being developed for Architectural Energy Corporation (AEC) by Battelle as part of a program sponsored by the California Energy Commission (CEC). Supplemental cost-share funds are provided by U.S. Department of Energy through the Pacific Northwest National Laboratory (PNNL).
+1.1 Purpose
+This Requirements Specification (RS) specifies the essential capabilities required of the automated diagnostic tool. The purpose of this document is to clarify for AEC, the California Energy Commission (CEC), the Office of Buildings Programs, Office of Energy Efficiency and Renewable Energy (EERN) of the U.S. Department of Energy, and the project team the results that must be achieved by the automated diagnostic tool. Any illustrative model presented in this document is used solely to explain the requirements and is NOT intended to address design or implementation issues.
+This SRS also specifies key AEC, CEC, and EERN requirements for project deliverables, including documentation.
+1.2 Scope
+The automated diagnostic tool detects and identifies faults in chillers and cooling tower subsystems of HVAC units using sensed data acquired from the unit, unit specifications, unit installation and configuration data, and unit operation data (such as schedules). The tool is a software product that will be utilized primarily by building operators and facilities managers and only secondarily by HVAC service technicians, energy service providers, and operation supervisors. Building operators will use the tool to monitor units for which they are responsible, perhaps monitoring from a central control room within the building. Service technicians will utilize the product on site during repair and maintenance visits or off site between visits. Energy service providers, responsible for a number of customers and facilities, will use the product to monitor a number of units remotely, possibly in many different buildings, checking for inefficiencies and problems requiring dispatch of service personnel. Finally, building operator supervisors will use the tool to guide decisions on the assignment of operators and prioritization of work. The tool will provide the user with a visual indication of faults, descriptive information concerning the faults and their causes, and suggested corrective actions. The tool will store the results of diagnostics for subsequent retrieval and use.
+The software require ments described in this document are applicable to HVAC systems and associated subsystems. Such subsystems can include chillers, cooling towers, and boilers. However, the initial version of the tool will focus on diagnostics for chillers and cooling towers only. The tool will automate diagnostic processes hitherto performed through a visual analysis of graphical data by a human expert.
+The “Product Overview” section describes factors that affect the software and its requirements. The “Concept Example” appendix describes how the software would function in an example situation.
+1.3 Definitions, Acronyms and Abbreviations
+Some of the following definitions are taken or adapted from IEEE Std 610.12-1990 (IEEE 1993a) and IEEE Std 830-1984 (IEEE 1993b).
+     
+Authenticate — the process by which the tool establishes the identity and privileges of the user by obtaining an identifier and password from the user and checking it against a database of predefined users. The user becomes authenticated when the identifier and password match one of the predefined users in the tool’s database.
+component — one of the parts that make up a software system. A component may be subdivided into other components [IEEE Std 610.12-1990]. Note: For the purpose of this specification, the term “component” will be used in preference to the term “module”
+diagnostic result — the output of the diagnostic processing. This can either be an identified fault condition or the confirmation of the absence of a fault condition.
+fixed data — data describing the characteristics of the unit under diagnosis, for example, specifications and design information, operating characteristics, set points, installation and configuration data, and operation data (such as schedules) that do not change on a regular basis.
+functional requirement — a requirement that specifies a function that a software system or software component must be able to perform [IEEE Std 610.12-1990]. In this requirements specification, functional requirements specify how the inputs to the software product should be transformed into outputs [IEEE Std 830-1984].
+interface requirement — a requirement that specifies an external item with which a software system or software component must interact, or that sets forth constraints on formats, timing, or other factors caused by such an interaction [IEEE Std 610.12-1990]
+module — see component
+product — (for this document) a software system or software component−along with any necessary data
+and documentation−for which requirements are specified in a requirements specification
+requirement — (1) a condition or capability needed by a customer to solve a problem or achieve an objective; (2) a condition or capability that must be met or possessed by a software system or software component to satisfy a contract, standard, specification, or other formally imposed document; (3) a documented representation of a condition or capability as in (1) or (2) [adapted from IEEE Std 610.12- 1990]
+requirements specification (RS) — a document of the essential requirements (functions, design constraints, and attributes) of the software and/or hardware and their external interfaces [adapted from IEEE Std 610.12-1990]
+RS — requirements specification
+     
+Sensed data — data that are measured through electronic or mechanical detection. Typically this data varies at such a rate, e.g., in real time, hourly, daily, weekly, or is otherwise difficult to estimate or model such that an accurate characterization of it can only be gained through such detection. This data includes temperatures, pressures, electrical current, machine state, etc.
+software system— a collection of software components related in such a way as to produce a result greater than what their parts, separately, could produce
+subsystem— a discrete part of an HVAC system, e.g., chiller or cooling tower. unit — a complete HVAC system
+usability — the ease with which a user can learn to operate, prepare inputs for, and interpret outputs of a software system or software component [IEEE Std 610.12-1990].
+1.4 References
+The following are references supporting these specifications:
+1.5 Overview
+Product Overview-- This section provides a descriptive overview of the automated diagnostic tool, its users and operating environment, and general factors that affect requirements. It lays the foundation for understanding the specific requirements that follow.
+
+Appendix A: Data Flow Diagrams of Diagnostic Processes for Chillers, Cooling Towers and Chilled Water Distribution provides diagrams showing the data flows and data-processing that lead from fixed data and sensed data to diagnostic conclusions.
+Appendix B: Data Dictionary for Chillers, Cooling Towers and Chilled Water Distribution provides a tabular listing of known system data corresponding to their use in Appendix A.
+Appendix C: Data Flow Diagrams for Basic Boiler Diagnostics provides diagrams and mini-specs showing data flows and data processing that lead from fixed data and sensed data to diagnostic conclusions.
+Appendix D; Data Dictionary for Boilers provides a tabular listing of all known system data elements corresponding to their use in Appendix C.
+
+
+2. Overall Description
+The following overview of the automated diagnostic tool supplies context for the specific requirements presented in later sections. The purpose of this information is to make the specific requirements easier to understand. All specific requirements are numbered in later sections.
+2.1 Product Perspective
+Currently, diagnostics on HVAC units and subsystems are performed largely on a manual basis. Sensed data, e.g., temperatures and pressures, are obtained from one or more data acquisition devices. These devices measure and store sensed data over periods of several days to several weeks. Prior to the diagnostic process, data from these devices is input to graphical display software for visual inspection by a human expert. The expert, relying on technical expertise and results of previous diagnostic experience, evaluates the condition of the unit and subsystems based on visual plots of the data. This process is depicted in Figure 1.
+  Figure 1. Current HVAC Diagnostic Process
+The process depicted in Figure 1 can be partitioned into three logical components. These components are delineated in the diagram by dashed lines and are the data-preprocessing component, the diagnostic component, and output component. The diagnostic tool described in this document will replace the current process with an automated one based on algorithms derived from expert practices. These algorithms operate without the need for data visualization or human expert input. Diagnostic results will be displayed to the user and stored for subsequent retrieval and analysis. For the purposes of this document, the automated diagnostic tool will be assumed to preserve the logical construction of the current process. This construction is depicted in Figure 2.
+  Figure 2. Logical Construction of HVAC Diagnostic Process
+
+2.2 Product Functions
+As previously stated, the functionality of the automated diagnostic tool can be partitioned into three logical components: the data preprocessing component, the diagnostic component, and the output component.
+The data-preprocessing component obtains data describing the subsystem under diagnosis and reduces, filters, and otherwise prepares the data for input to the diagnostic component. This data includes sensed data, e.g., temperatures, pressures, electrical current, machine state, etc., as well as fixed data describing the characteristics of the subsystem under diagnosis, for example, specifications and design information, operating characteristics and set points, etc. The data may be processed through averaging, trending, or other statistical analysis. Sensed data can originate from data acquisition hardware either in real time or at some arbitrary time after acquisition. Fixed data will generally be compiled prior to operation of the diagnostic tool and be obtained from permanent storage when needed. Specific requirements will be placed on the data-preprocessing component only with respect to types of data to be input and the format and interface requirements of this input. However, the component is described here to provide insight into the operation of the software.
+The diagnostic component will detect and identify faults in the operation of HVAC subsystems based on sensed and fixed data input from the data-preprocessing component. The diagnostic algorithms used for fault detection will be derived from current expert practices by AEC. The faults identified by the diagnostic will be enumerated and described under the functional requirements section.
+The output component will display and record results output from the diagnostic component. The results of the diagnostics will be displayed to the user in a simple, graphical and textual format. The results will also be stored to permanent storage for subsequent retrieval and analysis.
+
+2.3 User and Environment Characteristics
+As previously stated, users of the automated diagnostic tool will include service technicians, energy service providers, building operators, and building operator supervisors. Installed platforms could include portable computers, handheld devices, and personal workstations in control rooms and offices. Installed platforms may communicate with the HVAC unit under diagnosis using wireless interfaces, direct point-to-point connections, or over Internet or local area network. Platform operating systems will be initially restricted to Microsoft Windows-compatible systems.
+The computer expertise of the user base could vary over a wide range. Some users could be quite sophisticated, others familiar with only the most rudimentary computer-based tasks. However, it is expected that all users will have a good fundamental understanding of HVAC units. Setting up and operating the automated diagnostic tool should require minimal user input.
+Service technicians are expected to use the software as often as their service tasks dictate, perhaps several times a day for periods up to about one hour, in close proximity to the HVAC unit and possibly out of doors. They may also set up the diagnostic tool to collect data continuously offsite at their offices and inspect the data periodically to identify faults or confirm proper operation. Building operators are expected to use the software on an occasional basis every day. The tool would collect data and process it continuously but the operators would only check the results periodically. They may view results for only a few seconds to check the status of equipment while passing through a control room or may sit at a monitor for several minutes more carefully inspecting the diagnostic results and other information available on the tool’s display. Energy service providers and building operator supervisors could potentially use the software in a more continuous mode, allowing it to operate undisturbed for many hours or days to record diagnostic results over a period of time.
+See the “Concept Example” appendix for a detailed example of how the automated diagnostic tool will be used.
+
+2.4 General Constraints
+The automated diagnostic tool must support a wide variety of users with respect to computer expertise. In addition, different users will have different expectations for the tool with respect to data presentation and functionality. For instance, some users will simply require an immediate diagnostic result while other users may be interested in diagnostic results generated over an arbitrary time that can be subsequently reviewed.
+The tool must provide a capability to manually input and edit “fixed” data, i.e., data that does not vary in real-time. Such data includes HVAC unit set points, specifications, and configuration information. This data must be stored for subsequent use by the diagnostic tool for review and verification by other users and management. The tool should provide for configuration management of fixed data.     
+The user must have the capability to configure the tool for continuous diagnostic analysis over an indefinite period of time. In this mode, the tool will record diagnostic results for subsequent review. No printed reports will be required of the tool, but the tool must print screen images of diagnostic results and historical data at user request and must provide long term storage of diagnostic results and permit the user to supply metadata relevant to the results, e.g., location, HVAC serial number, model number, user name, date, etc.
+The tool will not provide capability for additional user-defined analysis of the diagnostic results, results will be provided in a simple, final, definitive manner. However, the tool may provide the user the capability to adjust the sensitivity of the diagnostic algorithms to increase the probability of exposing typically undetected diagnostic events or concealing detected diagnostic events (including false detections).
+The tool will be capable of obtaining sensed data from a variety of sources. Such sources should include real-time data acquisition devices and data files containing previously acquired data.
+The current version of the tool will include diagnostic algorithms for cooling tower and chiller subsystems of HVAC units. However, the design of the software should support the incorporation of diagnostic algorithms for additional HVAC subsystems. In addition, the tool should support modification or replacement of existing diagnostic algorithms.
+The automated diagnostic tool will be restricted to Microsoft Windows-compatible operating systems.
+
+2.5 Use-Case Model Survey
+This section provides an overview of the use case model that describes the operation of the user interface. Actual use cases that specifically define the operation of the user interface are presented in the requirements section.
+2.5.1 Introduction
+The use case model consists of five use cases as depicted in Figure 3. The main actor in the use case model is the human user. This actor is generalized as “User”. The User can be further specified as a general user or administrator. The general user has no ability to modify system settings. The admin istrator user is able to modify certain settings. The use case “Start and Stop Diagnostics” describes the process by which the administrator user activates and ceases diagnostic processing. The use case “Browse Current Diagnostics” describes the process by which the user views current diagnostic results. The use case “Browse Historical Diagnostics” describes the process by which the user views historical diagnostic results. The use case “Configure Diagnostics” describes the process by which the administrator user adjusts diagnostic parameters used in the diagnostic process. The use case “Authenticate User” describes the process by which the user makes known to the tool the privileges to which they are entitled.
+The requirements in this document are organized according to the categories listed in Table 1.
+    
+Use-Case Specifications
+- specify, in terms of use cases, the expected interactions and behavior of the software with respect to the defined actors.
+
+Functionality
+- specify functions that a system or component must be able to perform — the fundamental software actions that transform inputs into outputs
+
+Usability
+- specify factors affecting how easily users can learn to operate a system or component, prepare its inputs, and interpret its outputs
+
+ Supportability
+- include requirements affecting how easily a system or component can be maintained to meet its original requirements or extended to meet modified requirements
+
+Interfaces
+- specify requirements for user, hardware, software, and communication interfaces, as applicable.
+
+Security
+- specify needs for protecting the software from accidental or malicious access, use, modification, destruction, or disclosure
+
+Other Requirements
+- include special requirements that do not fit into previous categories
+
+3.1 Use-Case Specifications
+This section describes the fi ve main use cases describing the functionality of the user interface. These use cases are “Start and Stop Diagnostics”, “Browse Current Diagnostics”, “Browse Historical Diagnostics”, “Configure Diagnostics”, and “Authenticate User”. The use cases “Start and Stop Diagnostics” and “Configure Diagnostics” include the use case “Authenticate User”.
+3.1.1 Start and Stop Diagnostics Use Case
+3.1.1.1 Brief Description
+This use case provides the actor the means to start and stop diagnostic processing. The actor in this case is the administrator user (see 2.5.1).
+3.1.1.2 Flow of Events
+The use case begins just prior to when
+the user launches the application.
+
+Basic Flow – Start Diagnostics
+The user launches the tool by double-clicking the icon associated with the tool or typing the application’s name. The tool momentarily displays a splash screen identifying the tool, identifying developing and sponsoring organizations as appropriate, and listing copyright information.
+The tool displays the main window of the tool.
+The user starts the diagnostic processing by selecting a menu item named “Start Diagnostics” from a drop down menu named “Status”.
+Include (Authenticate User). If the user has the appropriate privilege (i.e., the user is the administrator user) the tool requests a confirmatory response from the user to start the diagnostic processing.
+If the user confirms the desire to start diagnostic processing, the tool starts the processing and displays  an animated indication that diagnostic processing is active.
+If the user responds negatively to the confirmation, the tool does not start the diagnostic processing but the user remains authenticated.
+If the user does not have the appropriate privilege, the tool does not start the diagnostic processing.
+The user secures the tool by selecting a menu item named “Logout” from the drop down menu named “File”.
+The tool returns the current user’s privileges to those of the general user.
+If a period of 15 minutes elapses whereby the user does not secure the tool, the users privileges will automatically revert to those of a general user.
+
+
+Alternative Flow
+Stopping Diagnostic Processing
+
+1. The user can stop diagnostic processing at any time after the diagnostic processing has started by selecting the “Stop Diagnostics” menu item from the main menu entitled “Status”.
+2. If the user is not authenticated as the administrator user, include (Authenticate User) to validate privileges for stopping diagnostic processing.
+3. If the user has the appropriate privilege, the tool requests confirmation to stop diagnostic processing.
+4. If the user responds positively to the confirmation, the tool stops diagnostic processing and indicates the stopped condition. Otherwise the software performs no function but the user remains authenticated.
+5. If the user selects the “Exit” menu item from the main menu entitled “File” and the diagnostic processing is not active, the tool exits.
+6. If the user selects “Exit” and the diagnostic processing is active, include (Authenticate User), if the user is not already validated, to verify the user’s privilege to stop diagnostic processing.
+7. If the user is permitted to stop diagnostic processing, the tool stops the processing and exits. Otherwise, the software performs no function.
+
+3.1.1.3 Special Requirements
+There are no special requirements for this use case.
+3.1.1.4 Preconditions
+There are no preconditions for this use case.
+
+
+3.1.1.5 Postconditions
+There are no postconditions for this use case.
+3.1.1.6 Extension Points
+There are no extension points for this use case.
+3.1.2 Browse Current Diagnostics Use Case
+3.1.2.1 Brief Description
+This use case provides the actor the means to view current diagnostic results. The actor in this case is the user (see 2.5.1).
+3.1.2.2 Flow of Events
+The use case begins with the tool executing and displaying a list of buildings under diagnosis on the main (initial) window.
+
+Basic Flow – Browse Current Diagnostics
+1. The tool displays the main (initial) window, listing buildings under diagnosis.
+2. The user selects a building of interest.
+3. The tool displays the subsystems window, tiled on top the main (initial) window.
+4. The user selects a subsystem of interest.
+5. The tool displays the condition window, tiled on top the subsystems window.
+6. The user selects a diagnostic of interest.
+7. The tool displays the diagnostic information window for that diagnostic.
+
+
+Alternative Flow
+1. At any window except the initial window, the user may click the “Back” button to dismiss the current window and re-establish the previous window as the current window. The user may then make a new selection.
+2. The user may click a button labeled “Print” on the diagnostic information window to print an image of the window.
+3. The tool displays a window listing possible items to print including the diagnostic information window.
+4. The user selects the diagnostic information window and clicks the “OK” button to print the window.
+
+3.1.2.3 Special Requirements
+There are no special requirements for this use case.
+3.1.2.4 Preconditions
+There are no preconditions for this use case.
+3.1.2.5 Postconditions
+The diagnostic processing will not cease or be negatively impacted during the activities of this use case.
+3.1.2.6 Extension Points
+There are no extension points for this use case.
+3.1.3 Browse Historical Diagnostics Use Case
+3.1.3.1 Brief Description
+This use case provides the actor the means to view historical diagnostic results. The actor in this case is the user (see 2.5.1).
+3.1.3.2 Flow of Events
+The use case begins with the tool displaying the diagnostic information window, itself displaying a description of a diagnostic of interest.
+
+Basic Flow – Browse Historical Diagnostics
+1. The user clicks the “History” button.
+2. The tool displays the diagnostic history window depicting the historical results of the selected condition of interest over the default viewing period in the form of a color map. The window provides a scroll bar for scrolling through historical results if data are available prior to the default viewing period. The default viewing period extends backward one week prior to the current date. Sliding the scroll bar does not change the viewing period displayed. The default time resolution for the window is one hour.
+3. The user slides the scroll bar backward or forward to view previous results up to the current time.
+4. The tool displays the results within a viewing period of one week, adding results to the beginning or ending of the period while dropping results of the opposite end. The tool does not change the viewing period.
+5. The user may close the diagnostic history window by clicking the “Close” button.
+6. The tool dismisses the diagnostic history window and the diagnostic information window and makes the condition window the current window.
+
+
+Alternative Flows
+1. The user selects a new viewing period from a list of periods provided by the tool.
+2. The tool redisplays the historically data over the new viewing period.
+
+Changing the Viewing Period
+1. The user specifies a start time and end time for an historical interval of interest using calendar controls.
+2. The tool displays historical results beginning with the first result on or after the specified start time up to the end time. The view is confined to the previously selected viewing period.
+
+Zooming
+1. The user selects a period of time within the displayed viewing period over which to expand or contract in time.
+2. The tool expands or contracts the selected period. If expanding, the selected period becomes the new viewing period. If contracting, the new viewing period becomes twice as long as the selected period and encloses it.
+
+
+
+Displaying Historical Diagnostic Information
+1. The user double-clicks a cell in the history window.
+2. The tool dismisses the current diagnostic information window if displayed. After a noticeable delay of approximately one second, the tool displays the diagnostic information window associated with the cell selected.
+
+Browsing Arbitrary History Intervals
+
+General Alternative Flows
+1. At the diagnostic information window, the user may click the “Close” button to dismiss the window and make the condition window the current window if the diagnostic history window is not displayed.
+2. If the user attempts to close the diagnostic information window and the diagnostic history window is still displayed, the diagnostic information window is dismissed but the diagnostic history window remains.
+3. If the condition window is closed, then both the diagnostic information and diagnostic history windows are closed if open.
+4. If the user does not specify an end time for the history interval in 3.1.3.2.4.1 Browsing Arbitrary History Intervals (1), it defaults to the current time.
+
+3.1.3.3 Special Requirements
+There are no special requirements for this use case.
+3.1.3.4 Preconditions
+The diagnostic processing need not be active for this use case. A diagnostic information window must be displayed for this use case to begin.
+3.1.3.5 Postconditions
+The diagnostic processing will not cease or be negatively impacted during the activities of this use case.
+
+3.1.3.6 Extension Points
+There are no extension points for this use case.
+3.1.4 Configure Diagnostics Use Case
+3.1.4.1 Brief Description
+This use case provides the actor the means to configure the diagnostic tool. This includes defining the buildings containing systems to be diagnosed, defining the systems themselves, specifying equipment setpoints, selecting diagnostic sensitivity, and modifying fixed data. The actor in this case is the administrator user (see 2.5.1).
+3.1.4.2 Flow of Events
+The diagnostic tool is executing prior to the processing of this use case and only the main window of the tool is displayed.
+
+ 3.1.4.2.5
+Basic Flow – Configure Diagnostics
+1. When presented with the main window, the user may select the “Configure Diagnostics” menu item from the menu entitled “File”.
+2. If the user has not already been authenticated as the administrator user, include (Authenticate User).
+3. If the user has the appropriate privilege, the tool displays the configuration window.
+4. The user may click the “Recall” button to read previously saved changes from a disk file or database.
+5. The tool populates the window with the data from the disk file.
+6. The user makes the desired changes to the configuration and can click the button labeled “Save” to save the changes. Otherwise, the user can click the button labeled “Close”.
+7. If the user clicks the button labeled “Save”, the tool will request confirmation to save the changes.
+8. If the user confirms, the tool will request a name for the disk file in which to save the modified data to permanent storage.
+9. The user will enter a name for the file or cancel the operation.
+10. If the user enters a name for the file, the tool will save the changes. If the user cancels the operation, the tool will perform no function.
+11. If the tool completes the save operation, the tool will ask the user if the changes are to be relayed to the diagnostic processing for immediate use.
+12. If the user confirms the changes are to be relayed to the diagnostic processing, the tool relays the changes if the processing is currently active. Otherwise, the tool does not relay the changes.
+13. If the user clicks the button labeled “Close”, the tool will request confirmation for the close and the potential loss of any changes.
+14. If the user confirms, the tool will dismiss the configuration window, ignoring any changes and returns the user to the main window. If the user rejects the initial desire to close, the tool will perform no function.
+
+
+3.1.4.2.6 Alternative Flows
+There are no alternative flows for this use case.
+3.1.4.3 Special Requirements
+There are not special requirements for this use case.
+3.1.4.4 Preconditions
+The main window of the tool must be the only window active for the tool prior to execution of this use case.
+3.1.4.5 Postconditions
+Any changes made by the administrator user to the diagnostic tool will take affect immediately if requested by the user.
+3.1.4.6 Extension Points
+There are no extension points for this use case.
+3.1.5 Authenticate User
+3.1.5.1 Brief Description
+This use case establishes the privileges of the user for certain functions of the tool.
+3.1.5.2 Flow of Events
+This use case begins when another use case requires its instantiation.
+3.1.5.2.7 Basic Flow
+1. The tool displays a window for entry of authenticating information, i.e., user name and password, to validate and establish the privileges of the user.
+2. The user enters their user name and password.
+3. The tool attempts to authenticate the user and indicates whether authentication has succeeded or not.
+4. If authentication is unsuccessful, the user is returned to the authentication window to reenter the information.
+5. The tool permits three attempts at authentication before dismissing the authentication window and returning the user to the previous window.
+6. The user may cancel the authentication process at and time and return to the previous window.
+
+3.1.5.2.8 Alternative Flows
+There are no alternative flows for this use case.
+3.1.5.2.9 Special Requirements
+There are no special requirements for this use case.
+
+3.1.5.2.10 Preconditions
+There are no preconditions for this use case.
+ 
+3.1.5.2.11 Postconditions
+There are no postconditions for this use case.
+
+3.1.5.2.12 Extension Points
+There are no extension points for this use case.
+
+3.2 Functionality
+This section describes the functional requirements of the software, that is, requirements describing the core functions the software must perform. This section begins with general requirements relevant to the tool as a whole. Subsequently, requirements are organized by the logical construction of the tool as data processing progresses from preprocessing to output processing.
+3.2.1 General
+The following general requirements pertain equally to the logical partitions of the tool.
+3.2.1.1 Users of the tool shall be classified into two types. The first type, general user, shall only be permitted to utilize a limited set of the capabilities of the tool. These capabilities are listed in Table 2. Typically a general user is only permitted to view the results of diagnostic processing either current or historical. The second type, administrator, shall be permitted all the privileges of the general user plus those identified in Table 2. The administrator is permitted all the privileges of the general user in addition to the privileges to configure the system and modify fixed data and diagnostic settings.
+
+3.2.2 Preprocessing
+The automated diagnostic tool shall input sensed data in real time from data acquisition devices and the HVAC unit under diagnosis as well as from data files containing previously acquired data, though not simultaneously. In addition, the tool shall input fixed data provided by the user. Sensed and fixed data used by the tool in performing automated diagnostics shall be stored to permanent storage for post-analysis by the diagnostic process and viewing of the results.
+
+3.2.2.1 The tool shall input sensed data in real time from data acquisition devices and the HVAC unit under diagnosis. The absolute time of input will be associated with each sensed data item for its complete lifecycle, including permanent storage. The time will be determined at the instant the acquisition of the sensed data is complete.
+3.2.2.2 The tool shall permit sensed data to be input from an electronic file, though not simultaneously with sensed data from external acquisition hardware. When inputting sensed data from an electronic file, only one file shall be used containing all necessary sensed data. The file shall be an ASCII text file containing only columns delimited by a single tab character or single comma. The file shall begin with a required header. The first column of the header will list, at a minimum, the entries “”Building Identifier” and “Input Identifier” in that order. Following columns on the Input Identifier row will list integer input identifiers. Following columns on the Building Identifier row will list corresponding integer building identifiers for the inputs. One or more comment rows may exist above and below these required rows. These comment rows are identified by a ‘#’ as the first character of the first column. These rows are ignored by the tool. The first uncommented column in the file after the required headers shall list the absolute time, in ascending order, associated with all entries in subsequent columns of the row. Each additional column in the file shall pertain to one and only one sensed parameter. Data values in the same row of the file correspond to identical time values. All columns in the file shall have the same number of rows. An example input file is presented in Table 3. When the tool is processing sensed data from an input file, the tool is considered to be operating in “batch mode”.
+Table 3 Example Input Data File Reflecting Specified Format
+
+3.2.2.3 Each sensed data item will be qualified as to its certitude during the acquisition process. Sensed data will be considered in doubt if acquisition of the data was not possible (for example, if an error occurs during communication with the acquisition hardware), or the data is outside the range of possible values. Otherwise, the sensor value will be deemed accurately acquired.
+3.2.2.4 The software will deem sensed data in doubt if acquisition of the data is not possible, due to communication failures, for a default number of successive samples. The default is dependent on sensor type. These default values are specified in Table 4. The number of successive samples for a given sensor type shall be modifiable by the administrator. Data not successfully acquired will be deemed “missing data”.
+Table 4 Default Number of Failed Successive Samples Indicating Sensor Data Acquisition Problem.
+
+3.2.2.5 Sensed data used in or supporting diagnostic analyses shall be saved to permanent storage.
+3.2.2.6 The occurrence of missing data shall be indicated in permanent storage by a unique and obvious place holder or indicator, e.g., a null value or sequence of characters that cannot be confused with non- missing data.
+3.2.2.7 Sensed data input to the tool shall be stored to permanent storage with a precision of three significant figures.
+3.2.2.8 Sensed data input to the tool shall be validated with respect to its expected range of values. Sensed data shall be assigned the ranges listed in Table 5 by default.
+Table 5 Default sensed data expected ranges
+
+3.2.2.9 The administrator shall have the capability to modify the expected range of sensed data against which the data will be validated.
+The engineering units of sensed data input to the tool shall comply with the units listed in
+3.2.2.10 Table 6 for the associated physical parameter measured prior to input to the diagnostics. The tool shall provide the capability to convert sensed data not provided in the units listed in
+          
+Table 6 to the required units.
+Table 6. Required engineering units for sensed data.
+
+3.2.2.11 The tool shall associate with each continuous parameter one or more tolerances each corresponding to a different sensitivity level for the tool.
+3.2.2.12 Any and all errors associated with obtaining, validating, converting, or storing the sensed data shall be logged as described in subsequent specifications and selected errors shall be reported to the user.
+
+3.2.3 Diagnostic Process
+The automated diagnostic tool shall detect and identify certain performance and operational faults in chiller and cooling tower subsystems of HVAC units following specified algorithms. In addition, the tool shall be designed to permit expansion of diagnostic analysis to additional subsystems. The faults identified and their causes and sources, shall be saved to permanent storage for subsequent analysis.
+3.2.3.1 The tool shall monitor performance and operational parameters listed in Table 7 for chillers and cooling towers and identify the specific faults in the specific fault categories listed in the table.
+Table 7. Performance and Operational Parameters Monitored by the Automated Diagnostic Tool and Specific Faults Identified
+3.2.3.2 With each fault identified in Table 7, the tool shall associate text describing the possible problem, causes, and a recommended fix. This text for each fault is listed in Table 8.
+Table 8 Text to Associate with Each Anomaly Detected 3.2.3.3 The tool shall be designed to permit the addition of diagnostic algorithms for other subsystems of HVAC units.
+3.2.3.4 A diagnostic algorithm shall not process if any input data to the algorithm is missing. The user shall be notified if a diagnostic algorithm cannot process due to missing data.
+3.2.3.5 Any and all errors associated with failures of the diagnostic algorithms shall be logged as described in subsequent specifications and selected errors shall be reported to the user.
+3.2.3.6 The tool shall monitor the unit under diagnosis, either in real time or batch mode, for an indefinite period of time or until input data are no longer available, and log diagnostic results as they are determined.
+3.2.3.7 Diagnostic results that are saved to permanent storage shall be accompanied in storage by the absolute time of occurrence, the identity of the unit to which the diagnostic applies, and the identity of the diagnostic.
+3.2.3.8 The administrator user shall have the capability to adjust the sensitivity of the diagnostic analysis in order to increase or decrease the probability of fault detection.
+3.2.4 Output Processing
+The automated diagnostic tool shall display and record diagnostic results. Diagnostic results to be displayed to the user will be done so in a simple, graphical and textual format. Diagnostic results shall also be saved to permanent storage for subsequent retrieval, display, and analysis.
+3.2.4.1 The administrator shall have the ability to specify which diagnostic results will not be reported in any manner, i.e., not detected.
+3.2.4.2 The display of each diagnostic result for fault conditions will include a description of the fault, potential causes of the fault, the location of the fault, and the absolute time of occurrence.
+
+3.3 Usability
+This section describes requirements related to the usability of the tool.
+3.3.1 User Interface
+The following specifies usability requirements for the user interface.
+3.3.1.1 The area on the main, systems, and condition windows sensitive to the users selection device, typically the mouse, shall include the line surrounding the item of interest over the entire width of the window. This includes the diagnostic indicators.
+3.3.1.2 The windows listing diagnostic results shall increase in height as needed to display entries up to a maximum of ten entries. Once the window has reached maximum size and there are additional items to display, the window shall deploy a scroll bar to permit the user to scroll through the additional entries. In this event, a summary set of diagnostic indicators shall appear above (below) the top (bottom) entry in the display. This set(s) of indicators shall summarize diagnostic indicators not currently appearing on the list above (below) it. An indicator in the summary set shall be active if any similar indicator not appearing above (or below) it is active. The summary set indicators comply with the same specification for activation as other indicators (see 3.5.1.39).
+3.3.1.3 The building, subsystems, and condition windows shall display the current time if the diagnostic tool is operating in real time. If the tool is operating in batch mode, the time displayed will be the time associated with the entry currently being processed in the batched input.
+3.3.1.4 If only a single building is defined, the subsystems window shall become the main window of the application and shall have all the functionality of the main window as described in these specifications.
+3.3.1.5 Each window of the diagnostic tool shall display an animated graphical feature indicating the status, whether active or not, of the diagnostic processing.
+3.3.1.6 The subsystem window shall be modal to the building window, the condition window modal to the subsystem window, and the diagnostic history and diagnostic information windows shall be modal to the condition window.
+
+3.4 Supportability
+This section describes requirements related to the support of the software after initial installation.
+3.4.1 Error Reporting
+Significant errors in software operation shall be logged to permanent storage with sufficient detail to guide the administrator and to assist support staff in locating and rectifying the error. In addition, selected errors shall be reported to the user.
+3.4.1.1 Software errors logged to permanent storage shall include the absolute time of occurrence, the name of the software module in which the error occurred, the name of the software function in which the error occurred, and a description of the error.
+
+3.5 Interfaces
+This section describes requirements related to interfaces of the tool.
+3.5.1 User Interfaces
+This section describes the specifications for the user interface.
+3.5.1.1 The user interface shall consist of six windows: Main window, configuration window, subsystems
+window, condition window, diagnostic information window, and diagnostic history window.
+3.5.1.2 These windows shall be organized in a hierarchy enforcing a navigational order on the user. This
+hierarchy is depicted in Figure 4. As indicated in the figure, the main window is at the top of the hierarchy                                                                      
+and is the first window that appears when the tool begins execution. The configuration window is subordinate to the main window and can only be displayed by a user selection on the main window. The third window in the hierarchy is the subsystems window and it can only be displayed by a user selection on the main window. The fourth window in the hierarchy is the condition window and it can only be displayed by a user selection on the subsystems window. The fifth window is the diagnostic information window. This window can only be displayed by a user selection on the condition window or by a user selection on the diagnostic history window if it is displayed. The diagnostic history window can only be displayed by a user action on the diagnostic information window.
+3.5.1.3 The main (e.g., initial or default) window shall list buildings monitored and summarizing the current diagnostic status of all contained monitored units. A recommended layout for this window is presented in Figure 5. This window shall be titled “Diagnostician”.
+3.5.1.4 The main window shall have main menus entitled “File” and “Status”.
+3.5.1.5 The main menu entitled “File” shall contain the following menu items in the following order: “Configure Diagnostics”, “Logout”, “Exit”.
+3.5.1.6 The main menu entitled “Status” shall contain the following menu items in the following order: “Start Diagnostics”, “Stop Diagnostics”.
+3.5.1.7 The menu items named “Configure Diagnostics” and “Exit” in the main menu entitled “File” shall be enabled at all times.
+3.5.1.8 The menu item named “Logout” in the main menu entitled “File” shall be enabled only if the current user is presently authenticated as the administrator user. Otherwise, this menu item shall be disabled.
+3.5.1.9 The menu item named “Start Diagnostics” in the main menu entitled “Status” shall be enabled only if diagnostic processing is not currently running. Otherwise, the menu item shall be disabled.
+3.5.1.10 The menu item named “Stop Diagnostics” in the main menu entitled “Status” shall be enabled only if diagnostic processing is currently running. Otherwise, the menu item shall be disabled.
+3.5.1.11 Selecting the “Configure Diagnostics” menu item of the main menu entitled “File” shall display the configuration window, making it the current window, modal to the main window.
+3.5.1.12 parameters:
+The configuration window shall permit the administrator user to modify the following
+a. The password for the administrator user.
+b. A toggle enabling or disabling the main window of the tool as a screen saver.
+c. A toggle enabling or disabling the main window’s position on the screen as the top most window.
+d. Buildings and subsystems to be monitored and the conditions they will be monitored for. The conditions will be selected from a list provided by the tool.
+e. The enabled state of individual conditions. Disabled conditions will not be processed or displayed.
+f. The sensitivity of each condition by selecting a sensitivity from a list provided by the tool.
+g. Scale factors for transforming the engineering units of sensed input data to therequired units.
+h. The expected range of sensed input data.
+
+3.5.1.13 The configuration window shall display the following non-modifiable information:
+3.5.1.14 The configuration window shall have a button labeled “Save” that when clicked will present the user with a window by which to enter a disk file or database name in which to save the modifiable data in the window. Entering a file name shall cause the permanent storage of the modified parameters and their immediate use by the diagnostic operations after confirmatory responses by the user. If the user does not confirm the request to save, it will not be performed. If the user does not confirm the request to relay the modified parameters to the diagnostic processing immediately, it will not be performed. In either event, the configuration window will remain displayed.
+3.5.1.15 The configuration window shall have a button labeled “Close” that will dismiss the configuration window and return the user to the main window. If the user has made changes to data in the configuration window, the tool will request confirmation of the user’s desire to dismiss the window. If the user does not confirm the request, the window will not be dismissed.
+3.5.1.16 The configuration window shall have a button labeled “Recall” that will permit the user to recall a disk file of previously saved parameters from which to populate the configuration window. When functioning as a screen saver, the window shall change location on the screen periodically and will continue to be updated by diagnostic results.
+3.5.1.17 The subsystems window shall list subsystems monitored for a specific building and summarizing the current diagnostic status of all monitored subsystems. A recommended layout for this window is presented in Figure 6.
+
+ Figure 6 Recommended Layout for Systems Window
+
+3.5.1.18 The condition window shall list the current status of all diagnostics for a specific subsystem. A recommended layout for this window is depicted in Figure 7.
+   Figure 7 Recommended Layout for Condition Window
+
+3.5.1.19 The diagnostic information window shall provide a detailed description of the diagnostic. A recommended layout for this window is depicted in Figure 8.
+     Figure 8 Recommended Layout for Diagnostic Information Window
+
+3.5.1.20 The diagnostic information window shall have a button labeled “Print” that when clicked will display a window listing items to print including the diagnostic information window, the history window, and both the diagnostic and history windows. The user selects the item of interest and clicks the “OK” button to print the selection, an image(s) of the item(s) selected.
+
+3.5.1.21 diagnostic: The diagnostic information window shall include the following information regarding the
+1. A description of the possible problem.
+2. Potential causes.
+3. Fixes.
+
+3.5.1.22 The diagnostic information window shall have a button labeled “Close” that shall dismiss the window.
+3.5.1.23	The diagnostic information window shall have a button labeled “History” that when clicked will display the diagnostic history window and display the previous week’s diagnostic results.
+3.5.1.24 The diagnostic history window shall display historical diagnostic results for a specific diagnostic. A recommended layout for this window is depicted in Error! Reference source not found.. This figure includes a color map that provides a graphical indication of diagnostic condition.
+            
+
+Figure 9 Recommended Layout for Diagnostic History Window
+
+3.5.1.25 The diagnostic history window shall provide user selections for start times and end times for the history interval. These selections shall be in the form of a calendar control.
+3.5.1.26 The smallest time interval displayed by the diagnostic history window is one week. 
+3.5.1.27 The longest time interval that may be displayed by the diagnostic history window is two years.
+3.5.1.28 The color map of the history window shall indicate confirmed faults with the color red, potential faults with the color yellow, normal conditions with the color green, and periods when diagnostic processing was not active with the color gray. Diagnostic processing should be assumed inactive between periods of time when no confirmed fault, potential fault, or normal condition has been recorded. 
+3.5.1.29 The vertical axis of the color map of the history window shall indicate hour of the day and the horizontal axis shall indicate the absolute date and the day of week.
+3.5.1.30 The diagnostic history window shall have a button labeled “Print” that when clicked will display a window listing items to print including the diagnostic information window, the history window, and both the diagnostic and history windows. The user selects the item of interest and clicks the “OK” button to print the selection, an image(s) of the item(s) selected.
+3.5.1.31 The diagnostic history window shall have a button labeled “Close” that will dismiss the window.
+3.5.1.32 The subsystems window, condition window, and diagnostic information window shall display a title that indicates its specific location or absolute path in the navigation hierarchy of windows. This title shall be a concatenation of the title of the previous window displayed, not including the diagnostic history window, and the name of the entry selected to obtain the current window. The two parts of the title shall be separated by a dash surrounded by a single space.
+3.5.1.33 The main window, subsystems window, condition window, and diagnostic information window shall display the appropriate time below the title as specified in 3.3.1.3.
+3.5.1.34 The main window, subsystems window, and condition window shall have three diagnostic indicators for each item listed.
+3.5.1.35 Oneindicatorshallbeactivewhennodiagnosticconditionsexists. Thisindicatorshallbe designated the “OK” indicator and shall appear green when active.
+3.5.1.36 One indicator shall be active when a potential diagnostic condition exists. This indicator shall be designated the “Caution” and shall appear yellow when active.
+3.5.1.37 One indicator shall be active when a confirmed diagnostic condition exists. This indicator shall be designated the “Not OK” indicator and shall appear red when active.
+3.5.1.38 Only one indicator shall be active at a given time for a specific diagnostic and no indicators shall flash when active.
+3.5.1.39 The diagnostic indicators on the main window and subsystems window shall summarize all diagnostic conditions associated with each entry in the window. In general, an active “OK” indicator indicates no positive diagnostic results currently exist within the building or subsystem, as applicable for the window. An active “Caution” indicator indicates that at least one potential problem currently exists within the building or subsystem, as applicable, and no confirmed problem currently exists. An active “Not OK” indicator indicates at least one confirmed problem exists regardless of whether cautionary or non-positive results exist. Essentially, confirmed problems override potential problem indications which override non-positive results.
+
+3.6 Security
+Certain functions of the tool directly available to the user require the user to possess supplementary privileges associated with performing these functions. These supplementary privileges are possessed by the administrator user and are in addition to those of the general user as described in 2.5. The tool determines the type of user by requesting an identifier and password from the user. The requirements related to this process are discussed in other requirements in this document.
+
+3.7 Other Requirements
+The tool shall log to permanent storage the occurrence of changes to the fixed data. The log shall indicate the time and date of the change, original value of the item(s) changed, and the new value of the item(s) changed.
+               
+4. Appendix A: Data Flow Diagrams of Diagnostic Processes for Chillers, Cooling Towers, and Chilled-Water Distribution
+
+
+5. Appendix B: Chiller, Cooling Tower, and Chilled-Water Distribution Data Dictionary
+
+6. Appendix C: Data Flow Diagrams for Boiler Diagnostic Processes
+

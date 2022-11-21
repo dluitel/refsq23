@@ -1,0 +1,310 @@
+1.SCOPE
+ 
+ This document defines the software requirements for the Swift X-Ray Telescope (XRT) Control Processor (XCP) Flight Software (FSW). This document is a Level 4 specification as defined in document GSFC-410.4-SPEC-0004, Swift Missions Requirements Document.
+1.1System Overview
+The Swift observatory is the next in a series of National Aeronautics and Space Administration (NASA) medium- class explorer (MIDEX) satellites and is the first-of-its-kind observatory for multi-wavelength transient astronomy. The goal of the Swift mission is to determine the origin of Gamma-Ray Bursts (GRBs) and to exploit data from these bursts to probe the early universe. Swift instrumentation will exploit newly discovered GRB afterglow characteristics to make a comprehensive study of approximately 1000 bursts over its planned three-year mission. Swift will determine the origin of GRBs, reveal how GRB blast waves interact with surroundings, and identify different classes of bursts and associated physical processes. To accomplish these mission goals, Swift employs three semi-autonomous science instruments. The Burst Alert Telescope (BAT) is a wide-angle x-ray telescope that detects GRBs. On detection, the spacecraft slews in the direction of the GRB, bringing it into the view of two narrow-field telescopes for higher-resolution multi-wavelength observation. The narrow-field telescopes are the X-Ray Telescope (XRT), and the Ultraviolet/Optical Telescope (UVOT).
+The XRT is a sensitive, autonomous X-ray Charge-Coupled Device (CCD) imaging spectrometer designed to measure the flux, spectrum, and light curve of GRBs and afterglow over a wide dynamic range covering more than seven orders of magnitude in flux. It will refine the BAT positions (~1-4' uncertainty) to 2.5" within 5 seconds of target acquisition for typical bursts, allowing ground-based optical telescopes to begin immediate spectroscopic observations of the afterglow.
+The XRT will reuse some components from the following previous projects: Cosmic Unresolved Background Instrument using CCDs (CUBIC), Imager for Magnetopause-to-Aurora Global Exploration (IMAGE), Joint European X-Ray Telescope (JET-X), and the X-Ray Multi-Mirror (XMM) satellite.
+The XRT electronics is split into two parts: the XRT Electronics Package (XEP), and the Camera Head.
+1.1.1XRT Electronics Package (XEP)
+The XEP is mounted on the Spacecraft (S/C) and is comprised of:
+• A VERSAmodule European (VME) enclosure with two separate Faraday shielded compartments for separate digital and analog sections
+• A split backplane for separate digital and analog sections
+• A low voltage power supply with fixed voltage outputs
+• A Lockheed-Martin Federal Systems (LMFS) single board computer using the RAD6000 microprocessor
+• The Communication board which has a Dual Redundant MIL-STD-1553 (1553) interface, a Real Time
+Clock (RTC), a Universal Asynchronous Receiver-Transmitter (UART) to interface to the Telescope
+Alignment Monitor (TAM), and a CCD data buffer
+• A Relay board which has relays to control the heaters, TAM power, camera door High-Output Paraffin
+(HOP) actuators, and the camera pressure relief valve HOP actuator. The Relay board also has the Digital-
+to-Analog Converters (DACs) for controlling the CCD voltages.
+• The Sequencer board which uses an AD21020 microprocessor to generate the CCD clock waveforms
+• The Housekeeping board that reads voltages, temperatures, and pressure.
+• The Clock board that drives the CCD’s clock and bias voltage inputs.
+• The Signal Chain board that processes the CCD’s analog video output and converts it to a digital bit stream.
+The Signal Chain board is dual redundant.
+• A Thermo-Electric Cooler (TEC) power supply with a variable voltage output
+• The Engineering Units (EU) will also have an Ethernet board for software development, but the Flight Units (FU) will not.
+A one-meter maximum length cable electrically connects the XEP and Camera Head. The XRT Interface Control Document (Pennsylvania State University [PSU] document # XRT-PSU-018) describes the interface between these two components.
+
+1.1.2Camera Head
+The major component of the XRT's electronics is the CCD camera. The CCD camera collects science data in the form of images, light curves, photon-counts, and spectral data. The CCD camera has three main modes of operation and up to sixty-four modes total.
+The Camera Head is mounted on the telescope tube and is comprised of a CCD and two video preamplifiers.
+The CCD itself has an image section, a store section, and two readout registers with video outputs. There are four synchronized three-phase clocks that shift the pixel rows in the image and store sections and shift the individual pixels in the two readout registers. The Clock Sequencer in the XEP generates these clocks. Each readout register has five guard pixels at the output side, and the readout register will not be operated in the split mode; therefore, both readout registers will be clocked in the same direction transferring all of the pixels to one, but not both, of the video outputs. Since the readout registers are comprised of split-pixels, the readout registers have to be clocked twice (double-clocked) to shift out one pixel. The readout registers will be double-clocked an extra 30 times (overclocks) to produce an output row length of 640 pixels. The clocking of an empty output register produces overclocked pixels that are used to determine system noise information. To transfer an image from the Image Section to the Store Section, the Image Section and Store Section three-phase clocks must be clocked simultaneously 602 times. The Clock Sequencer can be programmed with up to 64 waveform patterns which corresponds to the 64 modes of operation previously mentioned.
+The CCD is cooled by a TEC. The CCD's temperature is closed-loop controlled by the FSW. Telecommands will control the temperature setpoint, the ramp rate, and the mode — open or closed loop. A digital potentiometer with 100 wiper tap points will control the temperature setpoint. Two digital logic signals will control the wiper position: the up/down input and the clock input.
+1.1.4Power
+The XRT is powered by the S/C by two 28VDC power buses. They are the Operational Power Bus (OPB) and the Survival Power Bus (SPB). During normal operation, both buses are on. If the XRT fails to communicate to the S/C, the S/C will turn off the XRT’s OPB, thereby deactivating the XEP. The hardware-reset function is exercised by cycling the OPB off then back on. The SPB supplies power to heaters that prevent the XRT from being damaged by low temperatures. The S/C may switch off the SPB, but it will only do this in an emergency condition. The OPB is dual redundant, and the SPB is single string.
+1.1.5Communications Network
+The XRT communicates to the S/C via a dual redundant MIL-STD-1553B serial interface. Data transmitted to the S/ C from the XRT and commands received by the XRT from the S/C are formatted into "packets" within "frames" in accordance with the Swift 1553 Bus Protocol Interface Control Document (Spectrum Astro document # 1143-EI- S19121). The BAT, UVOT, XRT, two Star Trackers, and the S/C are all networked together on the 1553 bus.
+1.1.6Real Time Clock (RTC)
+A local copy of the spacecraft clock is maintained and is used to timestamp the data packets, which are formatted as Consultative Committee for Space Data Systems (CCSDS) Source Packets. To synchronize the clocks in the instruments with the clock in the S/C the S/C provides an At-The-Tone-The-Time-Will-Be message, delivered via the 1553 interface, and an RS422, One-Pulse-Per-Second (1PPS), hardwired signal that is the "Tone."
+1.1.7Telescope Alignment Monitor (TAM)
+The XRT's tube has uses a device called the Telescope Alignment Monitor (TAM) to measure the change in mechanical alignment of the XRT's tube. The TAM consists of a point source of light that is reflected by mirrors across the length of the telescope tube to a CCD camera. The change in the telescope's alignment is proportional to the change in the position of the point source of light shining on the CCD's pixel array. To obtain a resolution better than the pixel size, a centroid algorithm will be utilized. The TAM receives power from the XEP and delivers image data through an RS-422 serial interface. The TAM power can be turned on or off by a telecommand.
+1.1.8Doors and Sun Shutter
+The XRT has two doors: a telescope tube door and a camera door. The telescope tube door is controlled by the S/C. The camera door is controlled by circuitry in the XEP. Once opened, the camera door cannot be closed; therefore, it is important that the door is not inadvertently opened.
+The Sun Shutter is powered by the SPB and has its own solar panel for backup power. It is automatically opened and closed by a photosensor but can be overridden by a telecommand.
+1.1.9Heaters
+The telescope tube has 36 heater groups. Each heater group is closed-loop controlled by the FSW with the temperature set point and hysteresis controlled by a telecommand. These controllers are simple on-off type with hysteresis.
+The Mirror Baffle has three heater groups: Survival, Control 1, and Control 2. The Survival Heaters are powered and controlled by the Spacecraft Bus. The Control Heaters are closed-loop controlled by the FSW with a temperature set point controlled by a telecommand. The Control Heaters will be driven by solid state relays to allow for the numerous on-off cycles that will be required to regulate the temperature. The XRT Thermal Design Specification (PSU document # XRT-PSU-012) describes the heaters in greater detail.
+1.1.10Housekeeping
+The XRT monitors several items and reports them as Housekeeping (HK) telemetry. Numbers in parenthesis indicate how many of each housekeeping item are being monitored. The housekeeping items are:
+• CCD bias voltages (10)
+• CCD clock voltages (16)
+• Miscellaneous voltages (7: analog, digital, and clock driver)
+• Circuit board temperature sensors (10)
+• Mirror temperature sensors (10)
+• Telescope tube temperature sensors (20 forward and 20 rear)
+• Contamination sensors(4: focal plane, mirror, and one unassigned)
+• Mirror baffle temperature sensors (3)
+• TEC sensors (4: voltage, current, and temperature)
+• Miscellaneous temperature sensors (5: cold finger, CCD, camera, and optical bench interface)
+• Miscellaneous sensors (6: camera door position, sun shutter position, camera vacuum pressure, and bellows pressure)
+The XRT Data Formats document (PSU document # XRT-PSU-028) describes the HK formats in detail.
+
+
+
+2.REFERENCED DOCUMENTS
+ 
+ The following documents, of the exact issue shown, were referenced as indicated during the development of this SRS. The applicability statement associated with each document reference indicates Superceding if the referenced document supersedes this document in the event of a conflict.
+
+
+3.ABBREVIATIONS
+
+ 4.OVERVIEW
+ This section provides an overview of the FSW including a system context, operational concepts, goals and constraints, and a list of the computer software components (CSCs) which comprise the FSW. Detailed functional, performance, error recovery, and interface requirements for the identified CSCs are provided in Appendix A.
+4.1 System Context
+From a system (observatory) perspective, the FSW interfaces with the Spacecraft Control Unit (SCU) via the MIL- STD-1553B bus and the one pulse per second (1PPS) interface. The interfaces of the FSW in this context are illustrated in the following figure.
+Figure 4. Flight Software Context Diagram – External Interfaces
+From a XCP hardware interface perspective, the FSW executes on the XCP, stores and retrieves data from XCP Electrically Erasable Programmable Read Only Memory (EEPROM), and communicates with the Spacecraft using the MIL-STD-1553B Bus. The MIL-STD-1553B and Camera Head Interfaces are contained on the XRT Communications Module (XCM). The interfaces of the FSW in this context are illustrated in the following figure.
+
+4.2 Operational Concepts
+ The following sections describe the operational concepts of the FSW, including its functions, interfaces, performance characteristics, error detection, reporting and recovery mechanisms, and ground systems concepts.
+4.2.1Functions
+The FSW has the following primary functions:
+• Process science data from the camera and relay it to the Spacecraft Control Unit (SCU) in the form of CCSDS Source Packets.
+• Receive commands from the SCU that establish the current instrument state and camera mode.
+• Transmit detailed housekeeping data to the SCU in the form of CCSDS Source Packets.
+• Receive a time message from the SCU and synchronize the XCP local copy of the spacecraft clock.
+• Control the heaters on the telescope tube and on the thermal baffles.
+• Read the TAM.
+4.2.2 Observation Sequence
+The XRT supports three different, but very similar, observation sequences. The three observation types are:
+• Automatic
+• Preplanned
+• Target of Opportunity
+Figure 6 and Figure 7 show a detailed flowchart for the observation types. The sequence shown in the figures assumes the software is in automatic mode and not presently engaged in performing an observation. The sequence starts when a SISCATTITUDE message is received with the IS_SETTLED indication set to false. The message also indicates IS_IN_10_ARCMIN, which is true when the S/C is within ten arc minutes of the target position. When the distance remaining to slew is greater than ten arc minutes, the S/C begins the first of up to three activities that precede an observation. Each activity is initiated when the distance remaining is greater than ten arc minutes and the previous activity is complete. The pre-observation activities are:
+• Calculate row bias map
+• Calculate image bias map
+• Collect raw data image
+Figure 8. Observing Sequence (Part 3)
+The row bias map is maintained by the system so that it does not have to be recalculated prior to each observation; however, recalculation is preferred to provide the best results. One frame is acquired for the row bias map. Once the frame has been acquired, the software recalculates and stores the updated row bias map. Next, the software recalculates the image bias map, if more than ten arc minutes remain to the target location. The software accumulates 3-6 frames for the recalculation of the row bias map. Otherwise, the existing image bias map is reused. Finally, if the acquire raw data image flag is true and the distance to the target location is more than ten arc minutes, then the software acquires a single raw data image which is saved for later download to the ground.
+At this point, the S/C has come to within ten arc minutes of the target or the observation preliminary activities are complete, and the software switches to the fast timing mode. When the SISCATTITUDE message indicates that the S/C is settled, the software starts the main portion of the observation sequence.
+The software now acquires a frame of data and begins counting the pixels above a detection threshold. To be considered of interest, this count of pixels must exceed a programmable threshold. If the count does not exceed the threshold, then another image is acquired and summed with the first image. This new image is subjected to the pixel count. This process continues until the count threshold is met or the timeout period is exceeded. If the timeout is exceeded, an “XRT Centroid Error” message is transmitted to UVOT and to the ground (via TDRSS). Otherwise, when the source is detected, the software performs a centroid calculation on the image. If the centroid calculation fails, an “XRT Centroid Error” message is sent; otherwise, an “XRT Position” message is sent.
+Next, the software enters the fast timing mode. In this mode, the CCD reports a single value representing the entire image. The CCD reports one pixel every 16 μsec, or approximately 60,000 pixels/sec. The software remains in this mode while the lit pixel rate exceeds 40 cps. Once the count falls below 40 cps, the software switches to normal timing mode. In this mode, the CCD reports one row every 5 msec. Each row report sums up the CCD columns. This method is used until the rate drops below 2 cps. At this point, the software switches to photon counting mode. In this mode, the entire image is collected and scanned for lit pixels. The update rate is approximately once every 2.5 sec. The observation sequence ends when the target is occulted and the S/C slews to a new target.
+Preplanned observations differ from automatic ones in that the “XRT Position” message is not used. Processing is otherwise similar. The target of opportunity observations are treated like preplanned observations from an operational point of view of the software.
+The FSW has the following states: Off, Boot, Init, Manual, Red, and Auto. The following diagram illustrates these states and their transitions.
+The following table describes the XCP states and, for each mode, indicates whether the FSW is commandable, whether the FSW produces any telemetry, and whether or not detector events are processed.
+Table 1. FSW States
+Table 2. Science Data Acquisition Modes
+
+4.2.3 Interfaces and Performance
+Estimates of the maximum amount of memory required to buffer an observation were computed according to the following analyses.
+Table 3 shows the science telemetry data rates expected for a burst whose x-ray emission has dropped below about 3 Crabs within 30 seconds. Since in this case it is assumed that it takes the S/C 50 seconds to slew to the source, the flux is already at or below 4000 cps by the time the S/C has slewed to the target and generated an XRT Position and an XRT image report. At this flux, the XRT is generating science telemetry at a rate of just over 100kbps, but only for about 50 seconds. Within 30 minutes, the maximum length of an observation before the target is occulted, the data rate has dropped to less than 700bps. During such an observation the XRT would generate about 2.7MB of data, for an average rate of about 12kbps.
+The purpose of the Ramp DACs Mode is to continuously ramp the CCD bias voltages through all possible values.
+Used only during Integration and Test to verify CCD bias voltage circuitry before installing CCD. Real-time telemetry (strip chart mode) is used to check this data.
+Table 3. Science Telemetry Rates for Typical 30 Minute Observation
+Estimates for Central Processing Unit (CPU) margin are computed in Appendix D.
+
+4.2.4Error Detection, Reporting and Recovery
+The following sections summarize the error handling, reporting and recovery mechanisms of the XCP.
+4.2.4.1Software Configuration Integrity
+The XCP maintains primary and alternate FSW configurations in EEPROM. The primary FSW configuration in EEPROM is software locked to be read-only. The primary FSW provides MIL-STD-1553B communications with the SCU provided there are no failures. The XCP bootstrap software autonomously switches to the alternate FSW configuration in the event the primary configuration fails to boot.
+Problems with the FSW that are identified on-orbit can be corrected by patch or by a complete software reload. The FSW contains an EEPROM-resident file system on which an object file containing a software patch can be loaded. This object file can then be dynamically loaded and linked into the active FSW. Alternatively, a complete software build can be loaded to the alternate FSW location in EEPROM and the XCP commanded to boot the alternate configuration rather than the primary.
+4.2.4.2Memory Error Detection and Correction
+The processor board includes the EEPROM that holds the FSW, including the bootstrap and EEPROM File System (EEFS), and the Dynamic Random Access Memory (DRAM) that is used for program and data memory. The EEPROM includes a section that contains the bootstrap. This section of the EEPROM is software write locked prior to flight and includes a checksum that is compared against the stored data as part of the Built-In Tests (BIT) that are executed on system startup. The DRAM includes Error Detecting and Correcting (EDAC) memory. This facility stores redundant information in parallel with each memory word. Whenever a memory word is read, the EDAC is checked. The EDAC can detect and correct single bit errors. The EDAC can detect double bit errors. Both events cause an interrupt, and the software logs information about the error including the affected address and incrementing the EDAC error count. Multiple bit errors (two or more) cause the software to reset the processor by discontinuing strobing of the watchdog timer, which causes the watchdog timer to reset the board when it times out.
+A low priority software task called the Memory Scrubber runs when no other tasks are executing. This task steps through DRAM and reads each location. When a word is read that contains a single-bit error, this routine rewrites it to correct the problem, and the problem is logged to EEPROM through the interrupt mechanism. The scrubbing process seeks to repair single bit errors before they become uncorrectable multiple bit errors. Multiple bit errors uncovered by the scrubber result in a reset, even if the memory was not currently in use for processing by the FSW.
+4.2.4.3Error Reporting
+Errors are reported in XCP housekeeping telemetry. If an unrecoverable error occurs (such as an uncorrectable memory error), the XCP will reboot via watchdog timer. Detectable exceptions that cause a watchdog reboot are recorded to EEPROM.
+4.2.4.4Keep Alive Messaging
+A heartbeat message from XRT to the SCU serves to indicate “aliveness” of the XRT Instrument to the Spacecraft.
+4.2.5Ground Systems
+Ground systems are required for the following purposes:
+• Low-level driver integration and testing,
+• XCP process integration and verification testing,
+• Control and monitoring of XRT on orbit, and
+• Operational display of downlinked data.
+Low-level driver integration and testing is accomplished using a XCP-resident test application which exercises the hardware interfaces via actual flight software drivers. A Ground Support Equipment (GSE)-resident application communicates with the XCP-resident test application over an RS-232 port which is unused on flight. The GSE- resident application commands the XCP-resident application to output or receive data on a particular hardware interface. The GSE has a direct connection to each hardware interface, and stimulates or measures the interface in accordance with the command sent to the XCP. Because the RS-232 port is not used on flight, each interface can be tested without interfering with the command-and-response communication between the XCP and GSE resident applications.
+Simulators are used to facilitate integration and verification of the FSW. To contain costs and smooth integration, the external interfaces to the simulators used for integration testing and verification of the FSW are the same as the ground system interfaces in the Science Mission Operations Center (SMOC). This approach allows, at the
+
+  conceptual level, software and displays built for the display of data during simulated tests, to be reused for the operational display of downlinked data without modification.
+4.3Constraints
+Certain constraints are imposed upon the specification and design of the FSW and are derived from upper-level specifications and known system design constraints. These constraints are listed in Table 5, along with the implications of the constraint.
+Figure 12. Application Software Data Flow Diagram – Task Control
+
+4.4Goals
+Table 6 presents goals that serve to guide the specification, design, and development of the software. These goals should contribute to the simplicity (S), reliability (Rl), maintainability (M), reusability (Ru), and testability (T) of the system.
+
+4.5Software Components
+The Software Development Plan for the XCP lists and identifies the computer software configuration items (CSCIs) for the FSW and ground software. The following sections describe these CSCIs and their components. The following figures illustrate the overall data flows among the application-level CSCs.
+ 
+4.5.1System and Framework Flight Software
+This section lists and describes the computer software components (CSCs) of the System and Application Framework Flight Software. This software will be developed at SwRI.
+The MIL-STD-1553B Driver, identified XCP-1553, provides an application interface to the MIL-STD-1553B data bus hardware on the XCM.
+The RS-422 Driver, identified XCP-422, provides an application interface to the RS-422 interface on the XCM.
+The Analog I/O Driver, identified XCP-ANIO, provides an application interface to the Analog/Digital Converter, and Digital/Analog Converters on the XCM.
+The Built-In Tests CSC, identified XCP-BIT, provides a set of functions to perform and record the results of memory and hardware interface Built-In Tests (BIT).
+The Bootstrap CSC, identified XCP-BOOT, is a EEPROM-resident program which performs a basic hardware BIT, loads the flight program from EEPROM, and provides a simple RS-232-based monitor useful during development for examining memory and for downloading programs.
+The CCD Interface CSC, identified XCP-CCD, creates a ring buffer in XCP local memory and block transfers CCD row data from the XCM using XCP-CDD.
+The Command and Control CSC, identified XCP-CCM, is an application program that establishes and maintains the current system state, receives and dispatches commands.
+The CCD Data Driver, identified XCP-CDD, provides an application interface to read CCD rows from the CCD hardware interface.
+The Data Compression CSC, identified XCP-DCX, is an application program that compresses the data products produced by the by the Event Recognition Processor CSC.
+The Error Detection and Correction CSC, identified XCP-EDAC, provides a set of functions to facilitate the tracking, handling, and recording of memory errors.
+The EEPROM File System CSC, identified XCP-EEFS, provides a file system, which is media-compatible with Microsoft Disk Operating System (MS-DOS). The file system facilitates dynamic loading of application programs using the VxWorks loader.
+The EEPROM Interface Driver, identified XCP-EEPRM, provides an application interface to the EEPROM on the XCP .
+The Engineering Ethernet Driver, identified XCP-ENET, provides a network driver that can be used to support networking on the EU.
+The Power Distribution Driver, identified XCP-PDD, provides an application interface to relays on the Power Distribution Module (PDM).
+The Periodic Processing CSC, identified XCP-PP, is an application program that collects housekeeping telemetry, monitors the running tasks, and is responsible for overall error handling.
+The Real-Time Operating System CSC, identified XCP-RTOS, provides a real-time, multi-tasking environment. The XCP-RTOS is a Commercial Off-The-Shelf (COTS) product, identified as VxWorks 5.3, kernel version WIND 2.4, from Wind River Systems. The basic operating system is supplemented with a library of system utilities for memory management, and accessing the VME bus.
+The SCU Interface CSC, identified XCP-SCUI, is an application program that manages communications with the SCU over the 1553 interface at the application data protocol level.
+The Sequencer CSC, identified XCP-SEQ, provides an application interface that is capable of loading a sequencer program from the EEPROM File System and starting it on the TSM.
+The Time Synchronization CSC, identified as XCP-TIS, provides an application interface to access the XCM clock, compute Universal Time Coordinate (UTC) time, and perform clock synchronization with the Spacecraft.
+The Timer/Sequencer Driver, identified XCP-TSD, provides an application interface to the Timer/Sequencer Module (TSM).
+The Tube Heater Control CSC, identified XCP-THC, is an application program that controls the operation of the telescope heaters.
+
+4.5.2Science Flight Software
+This section lists and describes the computer software components (CSCs) of the Science Flight Software. This software will be developed at PSU.
+The Baffle Heater Control CSC, identified XCP-BHC, is an application program that controls the operation of the baffle heaters using a proportional-integral-derivative (PID) control algorithm.
+The Data Collection Control CSC, identified XCP-DCC, receives data collection commands, programs the sequencer through XCP-SEQ, and sets up CCD clocks and bias voltages through XCP-PDD and XCP-ANIO. In AUTO mode, XCP-DCC selects the camera mode based on counts-per-second.
+The Event Recognition Processor CSC, identified XCP-ERP, receives raw CCD data from XCP-CCD, generates output Reports, and outputs them to XCP-DCX for compression and transmission to the Spacecraft. It also contains the Event Recognition Algorithm, the Centroid Algorithm, the bad pixel/row/column routines, bias algorithms, baseline correction, and mean row correction.
+The Telescope Alignment Monitor CSC, identified XCP-TAM, reads an image from the TAM CCD, processes the image through a centroid algorithm, and computes a position correction for XCP-ERP.
+The Thermo-electric Cooler CSC, identified XCP-TEC, is an application program that controls the operation of the thermo-electric cooler using a PID control algorithm.
+    
+
+5.CONTEXT DIAGRAMS
+The following sections provide a context diagram for each CSC. The detailed requirements for each CSC are enumerated in an electronic spreadsheet to facilitate requirements traceability and verification tracking. A copy of this spreadsheet is contained in Appendix A. The electronic spreadsheet is configuration-controlled, and the copy attached to this document contains the version of the requirements applicable to the indicated revision of this document.
+5.1MIL-STD-1553B Driver
+A context diagram for the MIL-STD-1553B (1553) Driver is shown in the following figure.
+Figure 13. MIL-STD-1553B Driver Context Diagram
+
+5.2RS-422 Driver
+A context diagram for the RS-422 Driver is shown in the following figure.
+Figure 14. RS-422 Driver Context Diagram
+
+5.3Analog I/O Driver
+A context diagram for the Analog I/O Driver is shown in the following figure.
+Figure 15. Analog I/O Driver Context Diagram
+
+5.4Built-In Tests CSC
+A context diagram for the Built-In Tests (BIT) CSC is shown in the following figure.
+Figure 16. Built-In Tests CSC Context Diagram
+
+5.5Bootstrap CSC
+A context diagram for the Bootstrap CSC is shown in the following figure.
+Figure 17. Bootstrap CSC Context Diagram
+
+5.6CCD Interface CSC
+A context diagram for the CCD Interface CSC is shown in the following figure.
+Figure 18. CCD Interface CSC Context Diagram
+
+5.7Command and Control CSC
+Figure 19. Command and Control CSC Context Diagram
+
+5.8CCD Data Driver
+Figure 20. CCD Data Driver Context Diagram
+
+5.9Data Compression CSC
+A context diagram for the Data Compression CSC is shown in the following figure.
+Figure 21. Data Compression CSC Context Diagram
+
+5.10Error Detection and Correction CSC
+A context diagram for the Error Detection and Correction (EDAC) CSC is shown in the following figure.
+Figure 22. Error Detection and Correction CSC Context Diagram
+
+5.11EEPROM File System CSC
+A context diagram for the EEPROM File System CSC is shown in the following figure.
+Figure 23. EEPROM File System CSC Context Diagram
+
+5.12EEPROM Interface Driver
+A context diagram for the EEPROM Interface Driver is shown in the following figure.
+
+
+5.13Engineering Ethernet Driver
+A context diagram for the Engineering Ethernet Driver is shown in the following figure.
+   Figure 25. Engineering Ethernet Driver Context Diagram
+
+5.14Power Distribution Driver
+A context diagram for the Power Distribution Driver is shown in the following figure.
+   Figure 26. Power Distribution Driver Context Diagram
+
+5.15Periodic Processing CSC
+A context diagram for the Periodic Processing CSC is shown in the following figure.
+Figure 27.
+
+5.16Real-Time Operating System CSC
+A context diagram for the Operating System CSC is shown in the following figure.
+Figure 29. SCU Interface CSC Context Diagram
+
+5.18Sequencer Interface CSC
+A context diagram for the Sequencer Interface CSC is shown in the following figure.
+Figure 30. Sequencer Interface CSC Context Diagram
+
+5.19Time Synchronization CSC
+Figure 31. Time Synchronization CSC Context Diagram
+
+5.20Timer/Sequencer Driver
+A context diagram for the Timer/Sequencer Driver is shown in the following figure.
+Figure 32. Timer/Sequencer Driver Context Diagram
+
+5.21Tube Heater Control CSC
+A context diagram for the Tube Heater Control CSC is shown in the following figure.
+Figure 33. Tube Heater Control CSC Context Diagram
+
+5.22Baffle Heater Control
+Figure 34. Baffle Heater Control CSC
+
+5.23Data Collection Control CSC
+A context diagram for the Data Collection Control CSC is shown in the following figure.
+Figure 35. Data Collection Control CSC Context Diagram
+
+5.24Event Recognition Processor CSC
+A context diagram for the Event Recognition Processor CSC is shown in the following figure.
+Figure 36. Event Recognition Processor CSC Context Diagram
+
+5.25(Deleted) Formatter CSC
+A context diagram for the Formatter CSC is shown in the following figure.
+Figure 37. (Deleted) Formatter CSC Context Diagram
+
+5.26Telescope Alignment Monitor CSC
+A context diagram for the Telescope Alignment Monitor CSC is shown in the following figure.
+Figure 38. Telescope Alignment Monitor CSC Context Diagram
+
+5.27Thermo-Electric Cooler CSC
+A context diagram for the Thermo-Electric Cooler CSC is shown in the following figure.
+Figure 39. Thermo-Electric Cooler CSC Context Diagram
+
+
+
+ 6.DATA DICTIONARY
+ This section contains the data dictionary for the FSW. In this dictionary, Data Elements are described either as types or as composites. Composite Data Elements are constructed from more elementary components.
+
+APPENDIX A
+DETAILED SOFTWARE REQUIREMENTS
+Note: If reviewing this document electronically, the detailed software requirements are contained in a separate Microsoft® Excel spreadsheet file, 04121-xrtsrs-01.xls.
+
+
+APPENDIX B EEPROM MEMORY MAPS
+The following table details the locations of the various components of the Electrically-Eraseable Programmable Read-Only Memory, XCP_EEPROM.
+The following table details the locations of the various components of the SYSTEM_BLOCK.
+The following table details the locations of the components of the SYSTEM_CONFIG_AREA.
+The following table details the locations of the components of the SYSTEM_VOLATILE_AREA.
+The following table details the locations of the components of the BIT_DATA.
+The following table details the locations of the components of the BIT_DRAM.
+
+
+APPENDIX C TELECOMMANDS
+The following table lists the telecommands supported by XRT.
+
+
+APPENDIX D
+CPU THROUGHPUT CALCULATION
+Note: If reviewing this document electronically, the CPU throughput calculations are contained in a separate Microsoft® Excel spreadsheet file, XRTcpu_rev1.xls.
