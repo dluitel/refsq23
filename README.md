@@ -1,14 +1,16 @@
 # Introduction
-This repository contains the implementation and evaluation artifacts for "Using Language Models for Enhancing the Completeness of Natural-language Requirements" in sumbission to REFSQ 2023.
+This repository contains the implementation and evaluation artifacts for REFSQ 2023 submission titled "Using Language Models for Enhancing the Completeness of Natural-language Requirements", authored by Dipeeka Luitel, Shabnam Hassani and Mehrdad Sabetzadeh.
+
 
 
 # Prerequisites
 - Python 3.8
 - SpaCy 3.2.2
+- PyTorch1.10.2+cu113
 - GloVe (https://nlp.stanford.edu/projects/glove/) 
 - Transformers 4.16.2 library by Hugging Face (https://huggingface.co/)
-- PyTorch1.10.2+cu113
 - WEKA 3-8-5 (https://www.cs.waikato.ac.nz/ml/weka/)
+
 
 
 # Instructions
