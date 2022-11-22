@@ -1,5 +1,5 @@
 # REFSQ
-This repository contains implementation and evaluation artifacts for "Using Language Models for Enhancing the Completeness of Natural-language Requirements" in sumbission to REFSQ 2023.
+This repository contains the implementation and evaluation artifacts for "Using Language Models for Enhancing the Completeness of Natural-language Requirements" in sumbission to REFSQ 2023.
 
 
 # Prerequisite
