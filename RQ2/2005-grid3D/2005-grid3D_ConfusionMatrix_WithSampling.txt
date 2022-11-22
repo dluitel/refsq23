@@ -1,0 +1,143 @@
+Iteration 0:
+=== Summary ===
+
+Correctly Classified Instances        1219               72.0024 %
+Incorrectly Classified Instances       474               27.9976 %
+Kappa statistic                          0.3751
+Mean absolute error                      0.3201
+Root mean squared error                  0.4184
+Total Number of Instances             1693     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.764    0.293    0.441      0.764    0.559      0.405    0.823     0.592     TRUE
+                 0.707    0.236    0.908      0.707    0.795      0.405    0.823     0.936     FALSE
+Weighted Avg.    0.720    0.249    0.799      0.720    0.740      0.405    0.823     0.856     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 301  93 |   a = TRUE
+ 381 918 |   b = FALSE
+
+
+
+
+
+Iteration 1:
+=== Summary ===
+
+Correctly Classified Instances        1295               70.1517 %
+Incorrectly Classified Instances       551               29.8483 %
+Kappa statistic                          0.3588
+Mean absolute error                      0.3405
+Root mean squared error                  0.4412
+Total Number of Instances             1846     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.832    0.334    0.403      0.832    0.543      0.411    0.835     0.570     TRUE
+                 0.666    0.168    0.936      0.666    0.778      0.411    0.835     0.948     FALSE
+Weighted Avg.    0.702    0.203    0.823      0.702    0.728      0.411    0.835     0.867     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 327  66 |   a = TRUE
+ 485 968 |   b = FALSE
+
+
+
+
+
+Iteration 2:
+=== Summary ===
+
+Correctly Classified Instances        1303               72.0287 %
+Incorrectly Classified Instances       506               27.9713 %
+Kappa statistic                          0.3511
+Mean absolute error                      0.3233
+Root mean squared error                  0.4238
+Total Number of Instances             1809     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.732    0.283    0.414      0.732    0.529      0.380    0.810     0.536     TRUE
+                 0.717    0.268    0.907      0.717    0.801      0.380    0.810     0.938     FALSE
+Weighted Avg.    0.720    0.271    0.802      0.720    0.743      0.380    0.810     0.852     
+
+=== Confusion Matrix ===
+
+    a    b   <-- classified as
+  284  104 |    a = TRUE
+  402 1019 |    b = FALSE
+
+
+
+
+
+Iteration 3:
+=== Summary ===
+
+Correctly Classified Instances        1242               71.5438 %
+Incorrectly Classified Instances       494               28.4562 %
+Kappa statistic                          0.3741
+Mean absolute error                      0.3236
+Root mean squared error                  0.43  
+Total Number of Instances             1736     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.808    0.310    0.422      0.808    0.554      0.417    0.831     0.574     TRUE
+                 0.690    0.192    0.928      0.690    0.791      0.417    0.831     0.946     FALSE
+Weighted Avg.    0.715    0.218    0.817      0.715    0.739      0.417    0.831     0.865     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 307  73 |   a = TRUE
+ 421 935 |   b = FALSE
+
+
+
+
+
+
+Iteration 4:
+=== Summary ===
+
+Correctly Classified Instances        1284               70.5107 %
+Incorrectly Classified Instances       537               29.4893 %
+Kappa statistic                          0.3486
+Mean absolute error                      0.3396
+Root mean squared error                  0.4428
+Total Number of Instances             1821     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0.790    0.318    0.401      0.790    0.532      0.391    0.797     0.516     TRUE
+                 0.682    0.210    0.924      0.682    0.785      0.391    0.797     0.935     FALSE
+Weighted Avg.    0.705    0.233    0.813      0.705    0.731      0.391    0.797     0.846     
+
+=== Confusion Matrix ===
+
+   a   b   <-- classified as
+ 305  81 |   a = TRUE
+ 456 979 |   b = FALSE
+
+
+
+
+
+
+
+
+
+
+
+
