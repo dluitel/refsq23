@@ -1,5 +1,5 @@
 # Introduction
-This repository contains the implementation and evaluation artifacts for REFSQ 2023 submission titled "Using Language Models for Enhancing the Completeness of Natural-language Requirements", authored by Dipeeka Luitel, Shabnam Hassani and Mehrdad Sabetzadeh.
+This repository contains the implementation and evaluation artifacts for the REFSQ 2023 submission titled "Using Language Models for Enhancing the Completeness of Natural-language Requirements", authored by Dipeeka Luitel, Shabnam Hassani and Mehrdad Sabetzadeh.
 
 
 
